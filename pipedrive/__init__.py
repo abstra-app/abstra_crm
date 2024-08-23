@@ -1,0 +1,2 @@
+def full():
+    return 'full'
