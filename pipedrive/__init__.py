@@ -1,8 +1,7 @@
-import os
 import requests
 import json
 from dataclasses import dataclass
-from env_config import envs
+from .env_config import envs
 class Organization:
 
     def __init__(self, **kwargs):
