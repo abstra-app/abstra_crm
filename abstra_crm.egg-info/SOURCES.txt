@@ -1,8 +1,0 @@
-README.md
-setup.py
-abstra_crm.egg-info/PKG-INFO
-abstra_crm.egg-info/SOURCES.txt
-abstra_crm.egg-info/dependency_links.txt
-abstra_crm.egg-info/requires.txt
-abstra_crm.egg-info/top_level.txt
-pipedrive/__init__.py
