@@ -2,6 +2,8 @@ import requests
 import json
 from dataclasses import dataclass
 from .env_config import envs
+
+
 class Organization:
 
     def __init__(self, **kwargs):
@@ -147,8 +149,8 @@ class Person:
                     organization_id=result['item']['organization']['id'] if result['item']['organization'] else None,
                     owner_id=result['item']['owner']['id'] if result['item']['owner'] else None,
                     phone=result['item']['phones'][0] if result['item']['phones'] else '',
-                    job_title=result['item']['custom_fields'][1],
-                    linkedin=result['item']['custom_fields'][0]
+                    job_title='',
+                    linkedin=''
                 ) 
                 for result in data
             ]
@@ -253,7 +255,7 @@ class Deal:
         jessica = 21973448
         sophia = 21976836
         marcelo = 21976847
-        bruno = 21985174,
+        bruno = 21985174
 
     @dataclass
     class Channel:
