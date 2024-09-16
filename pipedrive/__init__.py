@@ -2,6 +2,7 @@ import requests
 import json
 from dataclasses import dataclass
 from .env_config import envs
+from enum import Enum
 
 
 class Organization:
@@ -213,15 +214,13 @@ class Person:
 
 
 class Deal:
-    @dataclass
-    class Pipeline:
+    class Pipeline(Enum):
         sales = 1
         trial = 2
         cs = 3
         marketing = 4
 
-    @dataclass
-    class Stage:
+    class Stage(Enum):
         # marketing pipeline
         marketing_new_lead = 18
         marketing_mql = 19
@@ -250,15 +249,13 @@ class Deal:
         trial_meeting_realized = 9
         trial_closed = 10
 
-    @dataclass
-    class Owner:
+    class Owner(Enum):
         jessica = 21973448
         sophia = 21976836
         marcelo = 21976847
         bruno = 21985174
 
-    @dataclass
-    class Channel:
+    class Channel(Enum):
         none = '(None)'
         rpf = 'RPF'
         personal_network = 'Personal Network'
