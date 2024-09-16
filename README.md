@@ -139,16 +139,16 @@ This ORM facilitates interaction with Pipedrive's API, specifically for managing
     **Description**: Updates an existing deal in Pipedrive.
 
     **Parameters**:
-    - `title` (str):
-    - `org_id` (int):
-    - `person_id` (int):
-    - `stage_id` (int):
-    - `pipeline_id` (int):
-    - `owner_id` (int):
-    - `channel` (str):
-    - `ads_id` (str):
-    - `campaign_id` (str):
-    - `ad_name` (str):
+    - `title` (str)
+    - `org_id` (int)
+    - `person_id` (int)
+    - `stage_id` (int)
+    - `pipeline_id` (int)
+    - `owner_id` (int)
+    - `channel` (str)
+    - `ads_id` (str)
+    - `campaign_id` (str)
+    - `ad_name` (str)
 
     **Returns**:  
     - An updated `Deal` object if successful.
@@ -167,14 +167,14 @@ This ORM facilitates interaction with Pipedrive's API, specifically for managing
 
 #### Attributes:
 
-- `id` (int):
-- `deal_id` (int):
+- `id` (int)
+- `deal_id` (int)
 - `subject` (str): The subject or title of the activity.
-- `type` (str):
+- `type` (str)
 - `due_date` (str): The date the activity is due (format: YYYY-MM-DD).
 - `due_time` (str): The time the activity is due (format: HH:MM).
 - `duration` (str):  The duration of the activity minutes (format: MM).
-- `org_id` (int):
+- `org_id` (int)
 - `person_id` (int)
 - `note` (str)
 - `done` (bool)
