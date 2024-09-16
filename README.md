@@ -15,16 +15,14 @@ This ORM facilitates interaction with Pipedrive's API, specifically for managing
 
 1. **retrieve_by(name: str) -> List[Organization]**
 
-   **Description**:  
-   Search organizations in Pipedrive.
+   **Description**: Search organizations in Pipedrive.
 
    **Inputs**:
    - `name` (str): The name of the organization to search for.
 
 2. **create(kwargs) -> Organization**
 
-   **Description**:  
-   Creates a new organization in Pipedrive.
+   **Description**: Creates a new organization in Pipedrive.
 
    **Inputs**:
    - `name` (str): The name of the organization. `required`
@@ -47,8 +45,7 @@ This ORM facilitates interaction with Pipedrive's API, specifically for managing
 
 1. **retrieve_by(email: str) -> List[Person]**
 
-   **Description**:  
-   Retrieves person from Pipedrive based on the email address provided.
+   **Description**: Retrieves person from Pipedrive based on the email address provided.
 
    **Inputs**:
    - `email` (str): The email of the person to search for.
@@ -56,8 +53,7 @@ This ORM facilitates interaction with Pipedrive's API, specifically for managing
 
 2. **create(kwargs) -> Person**
 
-   **Description**:  
-   Creates a new person in Pipedrive using the provided attributes.
+   **Description**: Creates a new person in Pipedrive using the provided attributes.
 
    **Inputs**:
    - `name` (str): The name of the person. `required`
@@ -73,8 +69,7 @@ This ORM facilitates interaction with Pipedrive's API, specifically for managing
 
 #### Nested Enums:
 
-**Description**:
-Pipedrive uses numeric ids to describe pipelines, stages, owners and meeting channels. These classes store the respective ids of those attributes
+**Description**: Pipedrive uses numeric ids to describe pipelines, stages, owners and meeting channels. These classes store the respective ids of those attributes
 
 1. **Pipeline**:
    Represents different types of pipelines in the system, such as sales, trial, customer success (CS), and marketing.
@@ -104,8 +99,7 @@ Pipedrive uses numeric ids to describe pipelines, stages, owners and meeting cha
 
 1. **is_meeting_scheduled_or_after (property)**
 
-    **Description**:  
-    `Meeting Scheduled` is a stage in the pipeline. This property differentiates between deals that had meetings and deals that didn't.
+    **Description**: `Meeting Scheduled` is a stage in the pipeline. This property differentiates between deals that had meetings and deals that didn't.
 
     **Returns**:  
     - `True` if the deal has a meeting scheduled or is in a later stage.
@@ -114,8 +108,7 @@ Pipedrive uses numeric ids to describe pipelines, stages, owners and meeting cha
 
 2. **create(kwargs) -> Deal**
 
-    **Description**:  
-    Creates a new deal in Pipedrive.
+    **Description**: Creates a new deal in Pipedrive.
 
     **Inputs**:
     - `title` (str) `required`
@@ -135,8 +128,7 @@ Pipedrive uses numeric ids to describe pipelines, stages, owners and meeting cha
 
 3. **get_all_deals() -> List[Deal]**
 
-    **Description**:  
-    Retrieves all deals from Pipedrive.
+    **Description**: Retrieves all deals from Pipedrive.
 
     **Returns**:  
     - A list of `Deal` objects retrieved from Pipedrive.
@@ -144,8 +136,7 @@ Pipedrive uses numeric ids to describe pipelines, stages, owners and meeting cha
 
 4. **update(self, kwargs) -> Deal**
 
-    **Description**:  
-    Updates an existing deal in Pipedrive.
+    **Description**: Updates an existing deal in Pipedrive.
 
     **Parameters**:
     - `title` (str):
@@ -165,8 +156,7 @@ Pipedrive uses numeric ids to describe pipelines, stages, owners and meeting cha
 
 5. **move_in_pipeline(self) -> Deal**
 
-    **Description**:  
-    Moves the deal to the next stage in the pipeline, depending on the current progress.
+    **Description**: Moves the deal to the next stage in the pipeline, depending on the current progress.
 
     **Returns**:  
     - An updated `Deal` object if the deal is moved to the next stage.
@@ -194,8 +184,7 @@ Pipedrive uses numeric ids to describe pipelines, stages, owners and meeting cha
 
 1. **create(kwargs) -> Activity**
 
-    **Description**:  
-    Creates a new activity in Pipedrive.
+    **Description**: Creates a new activity in Pipedrive.
 
     **Parameters**:
     - `deal_id` (int): `Required`
@@ -214,8 +203,7 @@ Pipedrive uses numeric ids to describe pipelines, stages, owners and meeting cha
 
 2. **get_all_activities() -> List[Activity]**
 
-    **Description**:  
-    Retrieves all activities from Pipedrive.
+    **Description**: Retrieves all activities from Pipedrive.
 
     **Returns**:  
     - A list of `Activity` objects retrieved from Pipedrive.
@@ -223,8 +211,7 @@ Pipedrive uses numeric ids to describe pipelines, stages, owners and meeting cha
 
 3. **update(self, kwargs) -> Activity**
 
-    **Description**:  
-    Updates an existing activity in Pipedrive.
+    **Description**: Updates an existing activity in Pipedrive.
 
     **Parameters**:
     - `deal_id` (int)
