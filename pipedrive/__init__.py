@@ -215,14 +215,14 @@ class Person:
 class Deal:
 
     @dataclass
-    class Pipeline():
+    class Pipeline:
         sales = 1
         trial = 2
         cs = 3
         marketing = 4
 
     @dataclass
-    class Stage():
+    class Stage:
         # marketing pipeline
         marketing_new_lead = 18
         marketing_mql = 19
@@ -252,14 +252,14 @@ class Deal:
         trial_closed = 10
 
     @dataclass
-    class Owner():
+    class Owner:
         jessica = 21973448
         sophia = 21976836
         marcelo = 21976847
         bruno = 21985174
 
     @dataclass
-    class Channel():
+    class Channel:
         none = '(None)'
         rpf = 'RPF'
         personal_network = 'Personal Network'
