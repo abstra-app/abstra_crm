@@ -67,7 +67,7 @@ This ORM facilitates interaction with Pipedrive's API, specifically for managing
 ---
 ### Deal
 
-#### Nested Enums:
+#### Nested Data Classes:
 
 **Description**: Pipedrive uses numeric ids to describe pipelines, stages, owners and meeting channels. These classes store the respective ids of those attributes
 
