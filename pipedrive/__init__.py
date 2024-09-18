@@ -3,7 +3,6 @@ import json
 from dataclasses import dataclass
 from .env_config import envs
 
-
 class Organization:
 
     def __init__(self, **kwargs):
@@ -213,7 +212,6 @@ class Person:
 
 
 class Deal:
-
     @dataclass
     class Pipeline:
         sales = 1
@@ -268,6 +266,11 @@ class Deal:
         linkedin_ads = 'Linkedin Ads'
         website_demo = 'Website Demo'
         outbound = 'Outbound'
+        product = 'Product'
+
+    @dataclass
+    class Tag:
+        trial = 'In Trial'
 
     def __init__(self, **kwargs):
         """
@@ -283,6 +286,7 @@ class Deal:
         :param owner_id: int
         :param channel: str
         :param ad_name: str
+        :param tag: str
         """
 
         self.id = kwargs.get('id', None)
@@ -296,6 +300,7 @@ class Deal:
         self.owner_id = kwargs.get('owner_id', None)
         self.channel = kwargs.get('channel', None)
         self.ad_name = kwargs.get('ad_name', None)
+        self.tag = kwargs.get('tag', None)
 
     @property
     def is_meeting_scheduled_or_after(self):
@@ -327,6 +332,7 @@ class Deal:
         :param ads_id: str
         :param campaign_id: str
         :param ad_name: str
+        :param tag: str
         :return: Deal
         """
 
@@ -344,7 +350,8 @@ class Deal:
             'channel': kwargs.get('channel', None),
             '67e90727a702feaee708eb4be15c896f1e4d125e': kwargs.get('ads_id', None),  # custom field
             '90ee914e411f8e76eda8b270c576fa20ce945af6': kwargs.get('campaign_id', None),  # custom field
-            'cb5af1d8630657fc3ab4bb01c243f993141df2e7': kwargs.get('ad_name', None)  # custom field
+            'cb5af1d8630657fc3ab4bb01c243f993141df2e7': kwargs.get('ad_name', None),  # custom field
+            '70a34135774fbab2a37608d3d4c5da3be9dfa10a': kwargs.get('tag', None)  # custom field
         }
 
         url = f'https://{envs.company_domain}.pipedrive.com/api/v1/deals?api_token={envs.api_key}'
@@ -370,7 +377,8 @@ class Deal:
                 stage_id=response_json['data']['stage_id'],
                 pipeline_id=response_json['data']['pipeline_id'],
                 owner_id=response_json['data']['user_id']['id'] if response_json['data']['user_id'] else None,
-                channel=response_json['data']['channel']
+                channel=response_json['data']['channel'],
+                tag=response_json['data']['70a34135774fbab2a37608d3d4c5da3be9dfa10a']
             )
 
     @staticmethod
@@ -406,7 +414,8 @@ class Deal:
                     channel=result['channel'],
                     ads_id=result['67e90727a702feaee708eb4be15c896f1e4d125e'],
                     campaign_id=result['90ee914e411f8e76eda8b270c576fa20ce945af6'],
-                    ad_name=result['cb5af1d8630657fc3ab4bb01c243f993141df2e7']
+                    ad_name=result['cb5af1d8630657fc3ab4bb01c243f993141df2e7'],
+                    tag=result['70a34135774fbab2a37608d3d4c5da3be9dfa10a']
                 ) 
                 for result in data
             ]
@@ -442,7 +451,8 @@ class Deal:
         data['channel'] = kwargs.get('channel', self.channel)
         data['67e90727a702feaee708eb4be15c896f1e4d125e'] = kwargs.get('ads_id', self.ads_id)
         data['90ee914e411f8e76eda8b270c576fa20ce945af6'] = kwargs.get('campaign_id', self.campaign_id)
-        data['cb5af1d8630657fc3ab4bb01c243f993141df2e7'] = kwargs.get('ad_name', self.ad_name)
+        data['cb5af1d8630657fc3ab4bb01c243f993141df2e7'] = kwargs.get('ad_name', self.ad_name),
+        data['70a34135774fbab2a37608d3d4c5da3be9dfa10a'] = kwargs.get('tag', self.tag)
 
         try:
             response = requests.put(url, data=json.dumps(data), headers={'Content-Type': 'application/json'})
@@ -465,7 +475,8 @@ class Deal:
                 channel=response_json['data']['channel'],
                 ads_id=response_json['data']['67e90727a702feaee708eb4be15c896f1e4d125e'],
                 campaign_id=response_json['data']['90ee914e411f8e76eda8b270c576fa20ce945af6'],
-                ad_name=response_json['data']['cb5af1d8630657fc3ab4bb01c243f993141df2e7']
+                ad_name=response_json['data']['cb5af1d8630657fc3ab4bb01c243f993141df2e7'],
+                tag=response_json['data']['70a34135774fbab2a37608d3d4c5da3be9dfa10a']
             )
         
     def move_in_pipeline(self) -> 'Deal':
