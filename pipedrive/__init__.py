@@ -436,6 +436,7 @@ class Deal:
         :param ads_id: str
         :param campaign_id: str
         :param ad_name: str
+        :param tag: str
         :return: Deal"""
 
         url = f'https://{envs.company_domain}.pipedrive.com/api/v1/deals/{self.id}?api_token={envs.api_key}'
