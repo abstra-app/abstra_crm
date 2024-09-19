@@ -498,6 +498,11 @@ class Deal:
 
 
 class Activity:
+    
+    @dataclass
+    class Type:
+        signup = 'sign_up'
+        meeting = 'meeting'
 
     def __init__(self, **kwargs):
         """
