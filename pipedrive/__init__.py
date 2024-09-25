@@ -2,6 +2,38 @@ import requests
 import json
 from dataclasses import dataclass
 from .env_config import envs
+from urllib.parse import urlencode
+from typing import Optional
+
+
+CONTENT_TYPE = 'application/json'
+
+def encode_url(entity: str, action: Optional[str] = None, entity_id: Optional[str] = None, params: Optional[dict] = None) -> str:
+    """
+    Encode URL with query parameters.
+
+    :param url: str
+    :param params: dict
+    :return: str
+    """
+
+    base_url = f'https://{envs.company_domain}.pipedrive.com/api/v1/{entity}'
+
+    if action is None and entity_id is None:
+        url = base_url
+    if action is not None:
+        url = f'{base_url}/{action}'
+    elif entity_id is not None:
+        url = f'{base_url}/{entity_id}'
+
+    if params is None:
+        params = {}
+
+    params['api_token'] = envs.api_key
+    query_string = urlencode(params)
+
+    return f'{url}?{query_string}'
+
 
 class Organization:
 
@@ -24,8 +56,13 @@ class Organization:
         :param name: str
         :return: list[Organization]
         """
-    
-        url = f'https://{envs.company_domain}.pipedrive.com/api/v1/organizations/search?fields=name&term={name}&api_token={envs.api_key}'
+
+        params = {
+            'fields': 'name',
+            'term': name,
+        }
+
+        url = encode_url(entity='organizations', action='search', params=params)
 
         response = requests.get(url)
         response_json = response.json()
@@ -69,10 +106,10 @@ class Organization:
             'owner_id': kwargs['owner_id']
         }
     
-        url = f'https://{envs.company_domain}.pipedrive.com/api/v1/organizations?api_token={envs.api_key}'
+        url = encode_url(entity='organizations')
 
         try:
-            response = requests.post(url, data=json.dumps(data), headers={'Content-Type': 'application/json'})
+            response = requests.post(url, data=json.dumps(data), headers={'Content-Type': CONTENT_TYPE})
             response.raise_for_status()
         except Exception as e:
             print(f'Error creating organization - {e}')
@@ -121,8 +158,13 @@ class Person:
         :param email: str
         :return: list[Person]
         """
+
+        params = {
+            'fields': 'email',
+            'term': email,
+        }
     
-        url = f'https://{envs.company_domain}.pipedrive.com/api/v1/persons/search?fields=email&term={email}&api_token={envs.api_key}'
+        url = encode_url(entity='persons', action='search', params=params)
 
         response = requests.get(url)
         response_json = response.json()
@@ -185,10 +227,10 @@ class Person:
             '275f25452ed859a914f51cad90d349f92f1756ad': kwargs.get('linkedin', None)  # custom field
         }
     
-        url = f'https://{envs.company_domain}.pipedrive.com/api/v1/persons?api_token={envs.api_key}'
+        url = encode_url(entity='persons')
 
         try:
-            response = requests.post(url, data=json.dumps(data), headers={'Content-Type': 'application/json'})
+            response = requests.post(url, data=json.dumps(data), headers={'Content-Type': CONTENT_TYPE})
             response.raise_for_status()
         except Exception as e:
             print(f'Error creating person - {e}')
@@ -354,10 +396,10 @@ class Deal:
             '70a34135774fbab2a37608d3d4c5da3be9dfa10a': kwargs.get('tag', None)  # custom field
         }
 
-        url = f'https://{envs.company_domain}.pipedrive.com/api/v1/deals?api_token={envs.api_key}'
+        url = encode_url(entity='deals')
 
         try:
-            response = requests.post(url, data=json.dumps(data), headers={'Content-Type': 'application/json'})
+            response = requests.post(url, data=json.dumps(data), headers={'Content-Type': CONTENT_TYPE})
             response.raise_for_status()
         except Exception as e:
             print(f'Error creating deal - {e}')
@@ -369,8 +411,8 @@ class Deal:
             return Deal(
                 id=response_json['data']['id'],
                 title=response_json['data']['title'],
-                org_id=response_json['data']['org_id'],
-                person_id=response_json['data']['person_id'],
+                org_id=response_json['data']['org_id']['value'] if response_json['data']['org_id'] else None,
+                person_id=response_json['data']['person_id']['value'] if response_json['data']['person_id'] else None,
                 ads_id=response_json['data']['67e90727a702feaee708eb4be15c896f1e4d125e'],
                 campaign_id=response_json['data']['90ee914e411f8e76eda8b270c576fa20ce945af6'],
                 ad_name=response_json['data']['cb5af1d8630657fc3ab4bb01c243f993141df2e7'],
@@ -384,7 +426,7 @@ class Deal:
     @staticmethod
     def get_all_deals() -> list['Deal']:
         
-        url = f'https://{envs.company_domain}.pipedrive.com/api/v1/deals?limit=500&api_token={envs.api_key}'
+        url = encode_url(entity='deals', params={ 'limit': 500 })
 
         response = requests.get(url)
         response_json = response.json()
@@ -439,7 +481,7 @@ class Deal:
         :param tag: str
         :return: Deal"""
 
-        url = f'https://{envs.company_domain}.pipedrive.com/api/v1/deals/{self.id}?api_token={envs.api_key}'
+        url = encode_url(entity='deals', entity_id=self.id)
 
         data = {}
 
@@ -456,7 +498,7 @@ class Deal:
         data['70a34135774fbab2a37608d3d4c5da3be9dfa10a'] = kwargs.get('tag', self.tag)
 
         try:
-            response = requests.put(url, data=json.dumps(data), headers={'Content-Type': 'application/json'})
+            response = requests.put(url, data=json.dumps(data), headers={'Content-Type': CONTENT_TYPE})
             response.raise_for_status()
         except Exception as e:
             print(f'Error updating deal - {e}')
@@ -562,7 +604,7 @@ class Activity:
             print('deal_id and subject are required')
             return None
 
-        url = f'https://{envs.company_domain}.pipedrive.com/api/v1/activities?api_token={envs.api_key}'
+        url = encode_url(entity='activities')
 
         data = {
             'deal_id': kwargs['deal_id'],
@@ -580,7 +622,7 @@ class Activity:
             data['participants'][0]['primary_flag'] = True
 
         try:
-            response = requests.post(url, data=json.dumps(data), headers={'Content-Type': 'application/json'})
+            response = requests.post(url, data=json.dumps(data), headers={'Content-Type': CONTENT_TYPE})
             response.raise_for_status()
         except Exception as e:
             print(f'Error creating task - {e}')
@@ -607,7 +649,7 @@ class Activity:
     @staticmethod
     def get_all_activities() -> list['Activity']:
         
-        url = f'https://{envs.company_domain}.pipedrive.com/api/v1/activities?limit=500&api_token={envs.api_key}'
+        url = encode_url(entity='activities', params={ 'limit': 500 })
 
         response = requests.get(url)
         response_json = response.json()
@@ -661,7 +703,7 @@ class Activity:
         :return: Activity
         """
 
-        url = f'https://{envs.company_domain}.pipedrive.com/api/v1/activities/{self.id}?api_token={envs.api_key}'
+        url = encode_url(entity='activities', entity_id=self.id)
 
         data = {}
 
@@ -683,7 +725,7 @@ class Activity:
             data['participants'][0]['primary_flag'] = True
 
         try:
-            response = requests.put(url, data=json.dumps(data), headers={'Content-Type': 'application/json'})
+            response = requests.put(url, data=json.dumps(data), headers={'Content-Type': CONTENT_TYPE})
             response.raise_for_status()
         except Exception as e:
             print(f'Error updating deal - {e}')
