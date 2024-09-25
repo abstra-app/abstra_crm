@@ -309,6 +309,7 @@ class Deal:
         website_demo = 'Website Demo'
         outbound = 'Outbound'
         product = 'Product'
+        cubo = 'Cubo'
 
     @dataclass
     class Tag:
