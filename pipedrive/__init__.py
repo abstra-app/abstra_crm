@@ -546,6 +546,7 @@ class Activity:
     class Type:
         signup = 'sign_up'
         meeting = 'meeting'
+        follow_up = 'task'
 
     def __init__(self, **kwargs):
         """
@@ -747,5 +748,57 @@ class Activity:
                 participants_ids=[r['person_id'] for r in response_json['data']['participants']] if response_json['data']['participants'] is not None else None,
                 note=response_json['data']['note'],
                 done=response_json['data']['done']
+            )
+        
+
+class Notes:
+
+    def __init__(self, **kwargs) -> None:
+        """
+        :param id: int
+        :param deal_id: int
+        :param content: str
+        """
+
+        self.id = kwargs.get('id', None)
+        self.deal_id = kwargs.get('deal_id', None)
+        self.content = kwargs.get('content', None)
+
+    @staticmethod
+    def create(**kwargs) -> 'Notes':
+        """
+        Create a new note in Pipedrive.
+
+        :param deal_id: int
+        :param content: str
+        :return: Notes
+        """
+
+        if 'deal_id' not in kwargs or 'content' not in kwargs:
+            print('deal_id and content are required')
+            return None
+
+        url = encode_url(entity='notes')
+
+        data = {
+            'deal_id': kwargs['deal_id'],
+            'content': kwargs['content']
+        }
+
+        try:
+            response = requests.post(url, data=json.dumps(data), headers={'Content-Type': CONTENT_TYPE})
+            response.raise_for_status()
+        except Exception as e:
+            print(f'Error creating note - {e}')
+            return None
+
+        response_json = response.json()
+        print(response_json)
+
+        if response_json['success']:
+            return Notes(
+                id=response_json['data']['id'],
+                deal_id=response_json['data']['deal_id'],
+                content=response_json['data']['content']
             )
         
