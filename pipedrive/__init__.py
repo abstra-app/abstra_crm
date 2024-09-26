@@ -793,7 +793,6 @@ class Notes:
             return None
 
         response_json = response.json()
-        print(response_json)
 
         if response_json['success']:
             return Notes(
