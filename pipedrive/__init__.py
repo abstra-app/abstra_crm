@@ -41,12 +41,16 @@ class Organization:
         """
         :param id: int
         :param name: str
+        :param website: str
+        :param linkedin: str
         :param owner_id: int
         """
 
         self.id = kwargs.get('id', None)
         self.name = kwargs.get('name', None)
         self.owner_id = kwargs.get('owner_id', None)
+        self.website = kwargs.get('website', None)
+        self.linkedin = kwargs.get('linkedin', None)
 
     @staticmethod
     def retrieve_by(name: str) -> list['Organization']:
@@ -83,7 +87,9 @@ class Organization:
             return [Organization(
                 id=result['item']['id'], 
                 name=result['item']['name'], 
-                owner_id=result['item']['owner']['id']) for result in data]
+                owner_id=result['item']['owner']['id'],
+                website='',
+                linkedin='') for result in data]
         
         return []
     
@@ -94,6 +100,8 @@ class Organization:
 
         :param name: str
         :param owner_id: int
+        :param linkedin: str
+        :param website: str
         :return: Organization
         """
 
@@ -103,7 +111,9 @@ class Organization:
         
         data = {
             'name': kwargs['name'],
-            'owner_id': kwargs['owner_id']
+            'owner_id': kwargs.get('owner_id', None),
+            'e6b50efd95fed42b00f5b9c4a68b0e7abf935f9a': kwargs.get('linkedin', None),  # custom field
+            '1b420d4868fd8f870880be6add510fc5af54f046': kwargs.get('website', None)  # custom field
         }
     
         url = encode_url(entity='organizations')
