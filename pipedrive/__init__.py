@@ -456,7 +456,7 @@ class Deal:
             response = requests.get(new_url)
             response_json = response.json()
 
-            data += response_json['data'].get('items', [])
+            data += response_json['data']
             additional_data = response_json.get('additional_data', {'pagination': {'more_items_in_collection': False}})
 
         if data:
@@ -684,7 +684,7 @@ class Activity:
             response = requests.get(new_url)
             response_json = response.json()
 
-            data += response_json['data'].get('items', [])
+            data += response_json['data']
             additional_data = response_json.get('additional_data', {'pagination': {'more_items_in_collection': False}})
 
         if data:
