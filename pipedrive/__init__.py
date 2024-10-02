@@ -457,6 +457,10 @@ class Deal:
         if 'title' not in kwargs:
             print('title is required')
             return None
+        
+        company_domain = kwargs.get('company_domain', None)
+        if company_domain in GENERIC_DOMAINS:
+            company_domain = None
 
         data = {
             'title': kwargs['title'],
@@ -471,7 +475,7 @@ class Deal:
             'cb5af1d8630657fc3ab4bb01c243f993141df2e7': kwargs.get('ad_name', None),  # custom field
             '70a34135774fbab2a37608d3d4c5da3be9dfa10a': kwargs.get('tag', None),  # custom field
             'aa6cbdaafd283f46db835b902902f549e86bb915': kwargs.get('use_case', None),  # custom field
-            '34d3f450e4c96e0390b8dd9a7a034e7d64c53db0': kwargs.get('company_domain', None)  # custom field
+            '34d3f450e4c96e0390b8dd9a7a034e7d64c53db0': company_domain  # custom field
         }
 
         url = encode_url(entity='deals')
