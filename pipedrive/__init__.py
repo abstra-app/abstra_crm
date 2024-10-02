@@ -321,6 +321,14 @@ class Person:
             )
         
         return None
+    
+    def extract_domain(self):
+        if self.email is None:
+            return None
+        if '@' not in self.email:
+            return None
+        
+        return self.email.split('@')[1]
 
 
 class Deal:
