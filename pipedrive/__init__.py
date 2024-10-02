@@ -510,19 +510,32 @@ class Deal:
 
         data = {}
 
-        data['title'] = kwargs.get('title', self.title)
-        data['org_id'] = kwargs.get('org_id', self.org_id)
-        data['person_id'] = kwargs.get('person_id', self.person_id)
-        data['stage_id'] = kwargs.get('stage_id', self.stage_id)
-        data['pipeline_id'] = kwargs.get('pipeline_id', self.pipeline_id)
-        data['user_id'] = kwargs.get('owner_id', self.owner_id)
-        data['channel'] = kwargs.get('channel', self.channel)
-        data['67e90727a702feaee708eb4be15c896f1e4d125e'] = kwargs.get('ads_id', self.ads_id)
-        data['90ee914e411f8e76eda8b270c576fa20ce945af6'] = kwargs.get('campaign_id', self.campaign_id)
-        data['cb5af1d8630657fc3ab4bb01c243f993141df2e7'] = kwargs.get('ad_name', self.ad_name)
-        data['70a34135774fbab2a37608d3d4c5da3be9dfa10a'] = kwargs.get('tag', self.tag)
-        data['aa6cbdaafd283f46db835b902902f549e86bb915'] = kwargs.get('use_case', self.use_case)
-        data['34d3f450e4c96e0390b8dd9a7a034e7d64c53db0'] = kwargs.get('company_domain', self.company_domain)
+        if 'title' in kwargs:
+            data['title'] = kwargs['title']
+        if 'org_id' in kwargs:
+            data['org_id'] = kwargs['org_id']
+        if 'person_id' in kwargs:
+            data['person_id'] = kwargs['person_id']
+        if 'stage_id' in kwargs:
+            data['stage_id'] = kwargs['stage_id']
+        if 'pipeline_id' in kwargs:
+            data['pipeline_id'] = kwargs['pipeline_id']
+        if 'owner_id' in kwargs:
+            data['user_id'] = kwargs['owner_id']
+        if 'channel' in kwargs:
+            data['channel'] = kwargs['channel']
+        if 'ads_id' in kwargs:
+            data['67e90727a702feaee708eb4be15c896f1e4d125e'] = kwargs['ads_id']
+        if 'campaign_id' in kwargs:
+            data['90ee914e411f8e76eda8b270c576fa20ce945af6'] = kwargs['campaign_id']
+        if 'ad_name' in kwargs:
+            data['cb5af1d8630657fc3ab4bb01c243f993141df2e7'] = kwargs['ad_name']
+        if 'tag' in kwargs:
+            data['70a34135774fbab2a37608d3d4c5da3be9dfa10a'] = kwargs['tag']
+        if 'use_case' in kwargs:
+            data['aa6cbdaafd283f46db835b902902f549e86bb915'] = kwargs['use_case']
+        if 'company_domain' in kwargs:
+            data['34d3f450e4c96e0390b8dd9a7a034e7d64c53db0'] = kwargs['company_domain']
 
         try:
             response = requests.put(url, data=json.dumps(data), headers={'Content-Type': CONTENT_TYPE})
