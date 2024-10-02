@@ -1,12 +1,72 @@
 import requests
 import json
 from dataclasses import dataclass
-from env_config import envs #TODO: change to relative import
+from .env_config import envs
 from urllib.parse import urlencode
 from typing import Optional
 
 
 CONTENT_TYPE = 'application/json'
+GENERIC_DOMAINS = generic_email_domains = [
+'aol.com',
+'aol.com.br',
+'bol.com',
+'bol.com.br',
+'countermail.com',
+'countermail.com.br',
+'disroot.org',
+'disroot.org.br',
+'fastmail.com',
+'fastmail.com.br',
+'gmail.com',
+'gmail.com.br',
+'gmx.com',
+'gmx.com.br',
+'hotmail.com',
+'hotmail.com.br',
+'hushmail.com',
+'hushmail.com.br',
+'icloud.com',
+'icloud.com.br',
+'keemail.me',
+'keemail.me.br',
+'kolabnow.com',
+'kolabnow.com.br',
+'lavabit.com',
+'lavabit.com.br',
+'live.com',
+'live.com.br',
+'mail.com',
+'mail.com.br',
+'mail.ru',
+'mail.ru.br',
+'mailbox.org',
+'mailbox.org.br',
+'msn.com',
+'msn.com.br',
+'outlook.com',
+'outlook.com.br',
+'posteo.de',
+'posteo.de.br',
+'protonmail.com',
+'protonmail.com.br',
+'rippermail.com',
+'rippermail.com.br',
+'runbox.com',
+'runbox.com.br',
+'tutanota.com',
+'tutanota.com.br',
+'uol.com',
+'uol.com.br',
+'yahoo.com',
+'yahoo.com.br',
+'yandex.com',
+'yandex.com.br',
+'ymail.com',
+'ymail.com.br',
+'zoho.com',
+'zoho.com.br',
+]
 
 def encode_url(entity: str, action: Optional[str] = None, entity_id: Optional[str] = None, params: Optional[dict] = None) -> str:
     """
