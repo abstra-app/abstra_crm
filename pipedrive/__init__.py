@@ -1,7 +1,7 @@
 import requests
 import json
 from dataclasses import dataclass
-from .env_config import envs
+from env_config import envs #TODO: change to relative import
 from urllib.parse import urlencode
 from typing import Optional
 
@@ -338,7 +338,6 @@ class Deal:
         :param pipeline_id: int
         :param owner_id: int
         :param channel: str
-        :param ad_name: str
         :param tag: str
         :param use_case: str
         :param company_domain: str
@@ -481,6 +480,60 @@ class Deal:
                     tag=result['70a34135774fbab2a37608d3d4c5da3be9dfa10a'],
                     use_case=result['aa6cbdaafd283f46db835b902902f549e86bb915'],
                     company_domain=result['34d3f450e4c96e0390b8dd9a7a034e7d64c53db0']
+                ) 
+                for result in data
+            ]
+        
+        return []
+    
+    @staticmethod
+    def retrieve_by(company_domain: str) -> list['Deal']:
+        """
+        Retrieve Deals from Pipedrive by Company_domain.
+        
+        :param company_domain: str
+        :return: list[Person]
+        """
+
+        params = {
+            'fields': 'custom_fields',
+            'term': company_domain,
+        }
+    
+        url = encode_url(entity='deals', action='search', params=params)
+
+        response = requests.get(url)
+        response_json = response.json()
+
+        data = response_json['data'].get('items', [])
+        additional_data = response_json.get('additional_data', {'pagination': {'more_items_in_collection': False}})
+
+        while additional_data['pagination']['more_items_in_collection']:
+
+            new_url = url + f'&start={additional_data["pagination"]["next_start"]}'
+            response = requests.get(new_url)
+            response_json = response.json()
+
+            data += response_json['data'].get('items', [])
+            additional_data = response_json.get('additional_data', {'pagination': {'more_items_in_collection': False}})
+    
+        if data:
+            return [
+                Deal(
+                    id=result['item']['id'], 
+                    title=result['item']['title'],
+                    org_id=result['item']['organization']['id'] if result['item']['organization'] else None,
+                    person_id=result['item']['person']['id'] if result['item']['person'] else None,
+                    owner_id=result['item']['owner']['id'] if result['item']['owner'] else None,
+                    stage_id=result['item']['stage']['id'],
+                    pipeline_id=None,
+                    channel='',
+                    ads_id='',
+                    campaign_id='',
+                    ad_name='',
+                    tag='',
+                    use_case='',
+                    company_domain=company_domain
                 ) 
                 for result in data
             ]
