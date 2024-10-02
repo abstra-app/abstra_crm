@@ -341,6 +341,7 @@ class Deal:
         :param ad_name: str
         :param tag: str
         :param use_case: str
+        :param company_domain: str
         """
 
         self.id = kwargs.get('id', None)
@@ -356,6 +357,7 @@ class Deal:
         self.ad_name = kwargs.get('ad_name', None)
         self.tag = kwargs.get('tag', None)
         self.use_case = kwargs.get('use_case', None)
+        self.company_domain = kwargs.get('company_domain', None)
 
     @property
     def is_meeting_scheduled_or_after(self):
@@ -389,6 +391,7 @@ class Deal:
         :param ad_name: str
         :param tag: str
         :param use_case: str
+        :param company_domain: str
         :return: Deal
         """
 
@@ -408,7 +411,8 @@ class Deal:
             '90ee914e411f8e76eda8b270c576fa20ce945af6': kwargs.get('campaign_id', None),  # custom field
             'cb5af1d8630657fc3ab4bb01c243f993141df2e7': kwargs.get('ad_name', None),  # custom field
             '70a34135774fbab2a37608d3d4c5da3be9dfa10a': kwargs.get('tag', None),  # custom field
-            'aa6cbdaafd283f46db835b902902f549e86bb915': kwargs.get('use_case', None)  # custom field
+            'aa6cbdaafd283f46db835b902902f549e86bb915': kwargs.get('use_case', None),  # custom field
+            '34d3f450e4c96e0390b8dd9a7a034e7d64c53db0': kwargs.get('company_domain', None)  # custom field
         }
 
         url = encode_url(entity='deals')
@@ -436,7 +440,8 @@ class Deal:
                 owner_id=response_json['data']['user_id']['id'] if response_json['data']['user_id'] else None,
                 channel=response_json['data']['channel'],
                 tag=response_json['data']['70a34135774fbab2a37608d3d4c5da3be9dfa10a'],
-                use_case=response_json['data']['aa6cbdaafd283f46db835b902902f549e86bb915']
+                use_case=response_json['data']['aa6cbdaafd283f46db835b902902f549e86bb915'],
+                company_domain=response_json['data']['34d3f450e4c96e0390b8dd9a7a034e7d64c53db0']
             )
 
     @staticmethod
@@ -474,7 +479,8 @@ class Deal:
                     campaign_id=result['90ee914e411f8e76eda8b270c576fa20ce945af6'],
                     ad_name=result['cb5af1d8630657fc3ab4bb01c243f993141df2e7'],
                     tag=result['70a34135774fbab2a37608d3d4c5da3be9dfa10a'],
-                    use_case=result['aa6cbdaafd283f46db835b902902f549e86bb915']
+                    use_case=result['aa6cbdaafd283f46db835b902902f549e86bb915'],
+                    company_domain=result['34d3f450e4c96e0390b8dd9a7a034e7d64c53db0']
                 ) 
                 for result in data
             ]
@@ -497,6 +503,7 @@ class Deal:
         :param ad_name: str
         :param tag: str
         :param use_case: str
+        :param company_domain: str
         :return: Deal"""
 
         url = encode_url(entity='deals', entity_id=self.id)
@@ -512,9 +519,10 @@ class Deal:
         data['channel'] = kwargs.get('channel', self.channel)
         data['67e90727a702feaee708eb4be15c896f1e4d125e'] = kwargs.get('ads_id', self.ads_id)
         data['90ee914e411f8e76eda8b270c576fa20ce945af6'] = kwargs.get('campaign_id', self.campaign_id)
-        data['cb5af1d8630657fc3ab4bb01c243f993141df2e7'] = kwargs.get('ad_name', self.ad_name),
-        data['70a34135774fbab2a37608d3d4c5da3be9dfa10a'] = kwargs.get('tag', self.tag),
+        data['cb5af1d8630657fc3ab4bb01c243f993141df2e7'] = kwargs.get('ad_name', self.ad_name)
+        data['70a34135774fbab2a37608d3d4c5da3be9dfa10a'] = kwargs.get('tag', self.tag)
         data['aa6cbdaafd283f46db835b902902f549e86bb915'] = kwargs.get('use_case', self.use_case)
+        data['34d3f450e4c96e0390b8dd9a7a034e7d64c53db0'] = kwargs.get('company_domain', self.company_domain)
 
         try:
             response = requests.put(url, data=json.dumps(data), headers={'Content-Type': CONTENT_TYPE})
@@ -539,7 +547,8 @@ class Deal:
                 campaign_id=response_json['data']['90ee914e411f8e76eda8b270c576fa20ce945af6'],
                 ad_name=response_json['data']['cb5af1d8630657fc3ab4bb01c243f993141df2e7'],
                 tag=response_json['data']['70a34135774fbab2a37608d3d4c5da3be9dfa10a'],
-                use_case=response_json['data']['aa6cbdaafd283f46db835b902902f549e86bb915']
+                use_case=response_json['data']['aa6cbdaafd283f46db835b902902f549e86bb915'],
+                company_domain=response_json['data']['34d3f450e4c96e0390b8dd9a7a034e7d64c53db0']
             )
         
     def move_in_pipeline(self) -> 'Deal':
