@@ -710,9 +710,20 @@ class Activity:
     
     @dataclass
     class Type:
-        signup = 'sign_up'
         meeting = 'meeting'
+        no_show = 'no_show'
         follow_up = 'task'
+        proposal_sent = 'deadline'
+        contract_sent = 'contract_sent'
+        email = 'email'
+        call = 'call'
+        start_trial = 'start_trial'
+        start_a_poc = 'lunch'
+        signup = 'sign_up'
+        contact_sent = 'contact_sent'
+        task = 'task1'
+        petit_comite = 'petit_comite'
+        trial_ended = 'trial_ended'
 
     def __init__(self, **kwargs):
         """
