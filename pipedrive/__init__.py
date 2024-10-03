@@ -4,6 +4,7 @@ from dataclasses import dataclass
 from .env_config import envs
 from urllib.parse import urlencode
 from typing import Optional
+from datetime import datetime
 
 
 CONTENT_TYPE = 'application/json'
@@ -926,6 +927,14 @@ class Activity:
                 note=response_json['data']['note'],
                 done=response_json['data']['done']
             )
+        
+    @staticmethod
+    def current_date():
+        return datetime.now().strftime('%Y-%m-%d')
+
+    @staticmethod
+    def current_time():
+        return datetime.now().strftime('%H:%M')
         
 
 class Notes:
