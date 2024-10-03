@@ -4,7 +4,7 @@ from dataclasses import dataclass
 from .env_config import envs
 from urllib.parse import urlencode
 from typing import Optional
-from datetime import datetime
+from datetime import datetime, timezone
 
 
 CONTENT_TYPE = 'application/json'
@@ -930,11 +930,11 @@ class Activity:
         
     @staticmethod
     def current_date():
-        return datetime.now().strftime('%Y-%m-%d')
+        return datetime.now(timezone.utc).strftime('%Y-%m-%d')
 
     @staticmethod
     def current_time():
-        return datetime.now().strftime('%H:%M')
+        return datetime.now(timezone.utc).strftime('%H:%M')
         
 
 class Notes:
