@@ -569,8 +569,11 @@ class Deal:
         Retrieve Deals from Pipedrive by Company_domain.
         
         :param company_domain: str
-        :return: list[Person]
+        :return: list[Deal]
         """
+
+        if company_domain is None or company_domain in GENERIC_DOMAINS:
+            return []
 
         params = {
             'fields': 'custom_fields',
