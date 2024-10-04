@@ -69,7 +69,7 @@ GENERIC_DOMAINS = generic_email_domains = [
 'zoho.com.br',
 ]
 
-def encode_url(entity: str, action: Optional[str] = None, entity_id: Optional[str] = None, params: Optional[dict] = None) -> str:
+def encode_url(entity: str, action: Optional[str] = None, entity_id: Optional[str] = None, subpath: Optional[str] = None, params: Optional[dict] = None) -> str:
     """
     Encode URL with query parameters.
 
@@ -82,10 +82,14 @@ def encode_url(entity: str, action: Optional[str] = None, entity_id: Optional[st
 
     if action is None and entity_id is None:
         url = base_url
+
     if action is not None:
         url = f'{base_url}/{action}'
     elif entity_id is not None:
         url = f'{base_url}/{entity_id}'
+
+    if subpath is not None:
+        url = f'{url}/{subpath}'
 
     if params is None:
         params = {}
@@ -705,7 +709,21 @@ class Deal:
 
             updated = self.update(stage_id=new_stage_id)
             return updated
+        
+    
+    def add_participant(self, participant_id: int) -> None:
+        """ Add a participant to a deal in Pipedrive."""
+        
+        url = encode_url(entity='deals', entity_id=self.id, subpath='participants')
+        data = { 'person_id': participant_id }
 
+        try:
+            response = requests.post(url, data=json.dumps(data), headers={'Content-Type': CONTENT_TYPE})
+            response.raise_for_status()
+        except Exception as e:
+            print(f'Error adding participant to deal - {e}')
+            return None
+        
 
 class Activity:
     
