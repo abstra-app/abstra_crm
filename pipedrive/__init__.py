@@ -79,6 +79,7 @@ def encode_url(entity: str, action: Optional[str] = None, entity_id: Optional[st
     """
 
     base_url = f'https://{envs.company_domain}.pipedrive.com/api/v1/{entity}'
+    url = ''
 
     if action is None and entity_id is None:
         url = base_url
@@ -414,6 +415,7 @@ class Deal:
         :param tag: str
         :param use_case: str
         :param company_domain: str
+        :param abstra_cloud_org_id: str
         """
 
         self.id = kwargs.get('id', None)
@@ -430,6 +432,7 @@ class Deal:
         self.tag = kwargs.get('tag', None)
         self.use_case = kwargs.get('use_case', None)
         self.company_domain = kwargs.get('company_domain', None)
+        self.abstra_cloud_org_id = kwargs.get('abstra_cloud_org_id', None)
 
     @property
     def is_meeting_scheduled_or_after(self):
@@ -464,6 +467,7 @@ class Deal:
         :param tag: str
         :param use_case: str
         :param company_domain: str
+        :param abstra_cloud_org_id: str
         :return: Deal
         """
 
@@ -488,7 +492,8 @@ class Deal:
             'cb5af1d8630657fc3ab4bb01c243f993141df2e7': kwargs.get('ad_name', None),  # custom field
             '70a34135774fbab2a37608d3d4c5da3be9dfa10a': kwargs.get('tag', None),  # custom field
             'aa6cbdaafd283f46db835b902902f549e86bb915': kwargs.get('use_case', None),  # custom field
-            '34d3f450e4c96e0390b8dd9a7a034e7d64c53db0': company_domain  # custom field
+            '34d3f450e4c96e0390b8dd9a7a034e7d64c53db0': company_domain,  # custom field
+            '68396303430f23178b5bc6978b5b3021cf5eff47': kwargs.get('abstra_cloud_org_id', None)  # custom field
         }
 
         url = encode_url(entity='deals')
@@ -517,7 +522,8 @@ class Deal:
                 channel=response_json['data']['channel'],
                 tag=response_json['data']['70a34135774fbab2a37608d3d4c5da3be9dfa10a'],
                 use_case=response_json['data']['aa6cbdaafd283f46db835b902902f549e86bb915'],
-                company_domain=response_json['data']['34d3f450e4c96e0390b8dd9a7a034e7d64c53db0']
+                company_domain=response_json['data']['34d3f450e4c96e0390b8dd9a7a034e7d64c53db0'],
+                abstra_cloud_org_id=response_json['data']['68396303430f23178b5bc6978b5b3021cf5eff47']
             )
 
     @staticmethod
@@ -556,7 +562,8 @@ class Deal:
                     ad_name=result['cb5af1d8630657fc3ab4bb01c243f993141df2e7'],
                     tag=result['70a34135774fbab2a37608d3d4c5da3be9dfa10a'],
                     use_case=result['aa6cbdaafd283f46db835b902902f549e86bb915'],
-                    company_domain=result['34d3f450e4c96e0390b8dd9a7a034e7d64c53db0']
+                    company_domain=result['34d3f450e4c96e0390b8dd9a7a034e7d64c53db0'],
+                    absrta_cloud_org_id=result['68396303430f23178b5bc6978b5b3021cf5eff47']
                 ) 
                 for result in data
             ]
@@ -564,7 +571,7 @@ class Deal:
         return []
     
     @staticmethod
-    def retrieve_by(company_domain: str) -> list['Deal']:
+    def retrieve_by(company_domain: Optional[str] = None, abstra_cloud_org_id: Optional[str] = None) -> list['Deal']:
         """
         Retrieve Deals from Pipedrive by Company_domain.
         
@@ -577,8 +584,12 @@ class Deal:
 
         params = {
             'fields': 'custom_fields',
-            'term': company_domain,
         }
+
+        if company_domain is not None:
+            params['term'] = company_domain
+        elif abstra_cloud_org_id is not None:
+            params['term'] = abstra_cloud_org_id
     
         url = encode_url(entity='deals', action='search', params=params)
 
@@ -613,7 +624,8 @@ class Deal:
                     ad_name='',
                     tag='',
                     use_case='',
-                    company_domain=company_domain
+                    company_domain=company_domain,
+                    abstra_cloud_org_id=abstra_cloud_org_id
                 ) 
                 for result in data
             ]
@@ -637,6 +649,7 @@ class Deal:
         :param tag: str
         :param use_case: str
         :param company_domain: str
+        :param abstra_cloud_org_id: str
         :return: Deal"""
 
         url = encode_url(entity='deals', entity_id=self.id)
@@ -669,6 +682,8 @@ class Deal:
             data['aa6cbdaafd283f46db835b902902f549e86bb915'] = kwargs['use_case']
         if 'company_domain' in kwargs:
             data['34d3f450e4c96e0390b8dd9a7a034e7d64c53db0'] = kwargs['company_domain']
+        if 'abstra_cloud_org_id' in kwargs:
+            data['68396303430f23178b5bc6978b5b3021cf5eff47'] = kwargs['abstra_cloud_org_id']
 
         try:
             response = requests.put(url, data=json.dumps(data), headers={'Content-Type': CONTENT_TYPE})
@@ -694,7 +709,8 @@ class Deal:
                 ad_name=response_json['data']['cb5af1d8630657fc3ab4bb01c243f993141df2e7'],
                 tag=response_json['data']['70a34135774fbab2a37608d3d4c5da3be9dfa10a'],
                 use_case=response_json['data']['aa6cbdaafd283f46db835b902902f549e86bb915'],
-                company_domain=response_json['data']['34d3f450e4c96e0390b8dd9a7a034e7d64c53db0']
+                company_domain=response_json['data']['34d3f450e4c96e0390b8dd9a7a034e7d64c53db0'],
+                abstra_cloud_org_id=response_json['data']['68396303430f23178b5bc6978b5b3021cf5eff47']
             )
         
     def move_in_pipeline(self) -> 'Deal':
