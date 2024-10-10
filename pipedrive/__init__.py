@@ -579,8 +579,12 @@ class Deal:
         :return: list[Deal]
         """
 
-        if company_domain is None or company_domain in GENERIC_DOMAINS:
+        if abstra_cloud_org_id is None and company_domain is None:
             return []
+
+        if abstra_cloud_org_id is None:
+            if company_domain is None or company_domain in GENERIC_DOMAINS:
+                return []
 
         params = {
             'fields': 'custom_fields',
