@@ -427,6 +427,7 @@ class Deal:
         self.stage_id = kwargs.get('stage_id', None)
         self.pipeline_id = kwargs.get('pipeline_id', None)
         self.owner_id = kwargs.get('owner_id', None)
+        self.status = kwargs.get('status', None)
         self.channel = kwargs.get('channel', None)
         self.ad_name = kwargs.get('ad_name', None)
         self.tag = kwargs.get('tag', None)
@@ -571,7 +572,11 @@ class Deal:
         return []
     
     @staticmethod
-    def retrieve_by(company_domain: Optional[str] = None, abstra_cloud_org_id: Optional[str] = None) -> list['Deal']:
+    def retrieve_by(
+        company_domain: Optional[str] = None, 
+        abstra_cloud_org_id: Optional[str] = None,
+        person_phone: Optional[str] = None,
+    ) -> list['Deal']:
         """
         Retrieve Deals from Pipedrive by Company_domain.
         
@@ -594,6 +599,8 @@ class Deal:
             params['term'] = company_domain
         elif abstra_cloud_org_id is not None:
             params['term'] = abstra_cloud_org_id
+        elif person_phone is not None:
+            params['term'] = person_phone
     
         url = encode_url(entity='deals', action='search', params=params)
 
@@ -621,6 +628,7 @@ class Deal:
                     person_id=result['item']['person']['id'] if result['item']['person'] else None,
                     owner_id=result['item']['owner']['id'] if result['item']['owner'] else None,
                     stage_id=result['item']['stage']['id'],
+                    status=result['item']['status'] if result['item']['status'] else None,
                     pipeline_id=None,
                     channel='',
                     ads_id='',
