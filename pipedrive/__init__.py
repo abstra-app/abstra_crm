@@ -640,7 +640,6 @@ class Deal:
         url = encode_url(entity='deals', params=params, version='v2')
 
         response = requests.get(url)
-        print(response.text)
         response_json = response.json()
 
         data = response_json['data']
@@ -650,7 +649,6 @@ class Deal:
 
             new_url = url + f'&cursor={additional_data['next_cursor']}'
             response = requests.get(new_url)
-            print(response.text)
             response_json = response.json()
 
             data += response_json['data']
@@ -661,13 +659,13 @@ class Deal:
                 Deal(
                     id=result['id'],
                     title=result['title'],
-                    org_id=result['org_id']['value'] if result['org_id'] else None,
-                    person_id=result['person_id']['value'] if result['person_id'] else None,
+                    org_id=result['org_id'],
+                    person_id=result['person_id'],
                     stage_id=result['stage_id'],
                     pipeline_id=result['pipeline_id'],
-                    owner_id=result['user_id']['id'] if result['user_id'] else None,
+                    owner_id=result['owner_id'],
                     channel=result['channel'],
-                    status=result['status'] if result['status'] else None
+                    status=result['status']
                 ) 
                 for result in data
             ]
