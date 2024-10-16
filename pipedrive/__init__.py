@@ -300,6 +300,13 @@ class Person:
         response = requests.get(url)
         response_json = response.json()
 
+        # ! Remove this line after testing
+        print(response.text)
+
+        # ! Temporary fix for the response
+        if 'data' not in response_json:
+            return []
+
         data = response_json['data'].get('items', [])
         additional_data = response_json.get('additional_data', {'pagination': {'more_items_in_collection': False}})
 
