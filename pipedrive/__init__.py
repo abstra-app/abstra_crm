@@ -298,7 +298,6 @@ class Person:
         url = encode_url(entity='persons', action='search', params=params)
 
         response = requests.get(url)
-        print(response.text)
         response_json = response.json()
 
         data = response_json['data'].get('items', [])
@@ -641,20 +640,19 @@ class Deal:
         url = encode_url(entity='deals', params=params, version='v2')
 
         response = requests.get(url)
-        print(response.text)
         response_json = response.json()
 
         data = response_json['data']
-        additional_data = response_json.get('additional_data', {'pagination': {'more_items_in_collection': False}})
+        additional_data = response_json.get('additional_data', {'next_cursor': None})
 
-        while additional_data['pagination']['more_items_in_collection']:
+        while additional_data['next_cursor']:
 
-            new_url = url + f'&start={additional_data["pagination"]["next_start"]}'
+            new_url = url + f'&cursor={additional_data['next_cursor']}'
             response = requests.get(new_url)
             response_json = response.json()
 
             data += response_json['data']
-            additional_data = response_json.get('additional_data', {'pagination': {'more_items_in_collection': False}})
+            additional_data = response_json.get('additional_data', {'next_cursor': None})
 
         if data:
             return [
