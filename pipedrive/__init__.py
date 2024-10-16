@@ -575,7 +575,6 @@ class Deal:
     def retrieve_by(
         company_domain: Optional[str] = None, 
         abstra_cloud_org_id: Optional[str] = None,
-        person_phone: Optional[str] = None,
     ) -> list['Deal']:
         """
         Retrieve Deals from Pipedrive by Company_domain.
@@ -599,8 +598,6 @@ class Deal:
             params['term'] = company_domain
         elif abstra_cloud_org_id is not None:
             params['term'] = abstra_cloud_org_id
-        elif person_phone is not None:
-            params['term'] = person_phone
     
         url = encode_url(entity='deals', action='search', params=params)
 
@@ -643,6 +640,58 @@ class Deal:
             ]
         
         return []
+
+    @staticmethod
+    def retrieve_by_phone(phone: str) -> list['Deal']:
+        """
+        Retrieve Deals from Pipedrive by phone.
+        :param phone: str
+        :return: list[Deal]
+        """
+
+        params = {
+            "fields": "custom_fields",
+            "term": phone,
+        }
+
+        url = encode_url(entity='deals', action='search', params=params)
+
+        response = requests.get(url)
+        response_json = response.json()
+
+        data = response_json['data'].get('items', [])
+        additional_data = response_json.get('additional_data', {'pagination': {'more_items_in_collection': False}})
+
+        while additional_data['pagination']['more_items_in_collection']:
+
+            new_url = url + f'&start={additional_data["pagination"]["next_start"]}'
+            response = requests.get(new_url)
+            response_json = response.json()
+
+            data += response_json['data'].get('items', [])
+            additional_data = response_json.get('additional_data', {'pagination': {'more_items_in_collection': False}})
+    
+        if data:
+            return [
+                Deal(
+                    id=result['item']['id'], 
+                    title=result['item']['title'],
+                    org_id=result['item']['organization']['id'] if result['item']['organization'] else None,
+                    person_id=result['item']['person']['id'] if result['item']['person'] else None,
+                    owner_id=result['item']['owner']['id'] if result['item']['owner'] else None,
+                    stage_id=result['item']['stage']['id'],
+                    status=result['item']['status'] if result['item']['status'] else None,
+                    pipeline_id=None,
+                    channel='',
+                    ads_id='',
+                    campaign_id='',
+                    ad_name='',
+                    tag='',
+                    use_case='',
+                ) 
+                for result in data
+            ]
+
 
     def update(self, **kwargs) -> 'Deal':
         """
