@@ -298,6 +298,7 @@ class Person:
         url = encode_url(entity='persons', action='search', params=params)
 
         response = requests.get(url)
+        print(response.text)
         response_json = response.json()
 
         data = response_json['data'].get('items', [])
@@ -316,13 +317,11 @@ class Person:
             return [
                 Person(
                     id=result['item']['id'], 
-                    name=result['item']['name'], 
-                    email=result['item']['primary_email'],
+                    name=result['item']['name'] if result['item']['name'] else '', 
+                    email=result['item']['primary_email'] if result['item']['primary_email'] else '',
                     organization_id=result['item']['organization']['id'] if result['item']['organization'] else None,
                     owner_id=result['item']['owner']['id'] if result['item']['owner'] else None,
                     phone=result['item']['phones'][0] if result['item']['phones'] else '',
-                    job_title='',
-                    linkedin=''
                 ) 
                 for result in data
             ]
@@ -642,6 +641,7 @@ class Deal:
         url = encode_url(entity='deals', params=params, version='v2')
 
         response = requests.get(url)
+        print(response.text)
         response_json = response.json()
 
         data = response_json['data']
@@ -667,14 +667,7 @@ class Deal:
                     pipeline_id=result['pipeline_id'],
                     owner_id=result['user_id']['id'] if result['user_id'] else None,
                     channel=result['channel'],
-                    status=result['status'] if result['status'] else None,
-                    ads_id=result['67e90727a702feaee708eb4be15c896f1e4d125e'],
-                    campaign_id=result['90ee914e411f8e76eda8b270c576fa20ce945af6'],
-                    ad_name=result['cb5af1d8630657fc3ab4bb01c243f993141df2e7'],
-                    tag=result['70a34135774fbab2a37608d3d4c5da3be9dfa10a'],
-                    use_case=result['aa6cbdaafd283f46db835b902902f549e86bb915'],
-                    company_domain=result['34d3f450e4c96e0390b8dd9a7a034e7d64c53db0'],
-                    absrta_cloud_org_id=result['68396303430f23178b5bc6978b5b3021cf5eff47']
+                    status=result['status'] if result['status'] else None
                 ) 
                 for result in data
             ]
