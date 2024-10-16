@@ -69,7 +69,14 @@ GENERIC_DOMAINS = generic_email_domains = [
 'zoho.com.br',
 ]
 
-def encode_url(entity: str, action: Optional[str] = None, entity_id: Optional[str] = None, subpath: Optional[str] = None, params: Optional[dict] = None) -> str:
+def encode_url(
+        entity: str, 
+        action: Optional[str] = None, 
+        entity_id: Optional[str] = None, 
+        subpath: Optional[str] = None, 
+        params: Optional[dict] = None,
+        version: Optional[str] = 'v1',    
+    ) -> str:
     """
     Encode URL with query parameters.
 
@@ -78,7 +85,7 @@ def encode_url(entity: str, action: Optional[str] = None, entity_id: Optional[st
     :return: str
     """
 
-    base_url = f'https://{envs.company_domain}.pipedrive.com/api/v1/{entity}'
+    base_url = f'https://{envs.company_domain}.pipedrive.com/api/{version}/{entity}'
     url = ''
 
     if action is None and entity_id is None:
@@ -273,7 +280,55 @@ class Person:
             ]
         
         return []
-    
+
+    @staticmethod
+    def retrieve_by_phone(phone: str) -> list['Person']:
+        """
+        Retrieve persons from Pipedrive by phone.
+        
+        :param phone: str
+        :return: list[Person]
+        """
+
+        params = {
+            'fields': 'phone',
+            'term': phone,
+        }
+
+        url = encode_url(entity='persons', action='search', params=params)
+
+        response = requests.get(url)
+        response_json = response.json()
+
+        data = response_json['data'].get('items', [])
+        additional_data = response_json.get('additional_data', {'pagination': {'more_items_in_collection': False}})
+
+        while additional_data['pagination']['more_items_in_collection']:
+
+            new_url = url + f'&start={additional_data["pagination"]["next_start"]}'
+            response = requests.get(new_url)
+            response_json = response.json()
+
+            data += response_json['data'].get('items', [])
+            additional_data = response_json.get('additional_data', {'pagination': {'more_items_in_collection': False}})
+        
+        if data:
+            return [
+                Person(
+                    id=result['item']['id'], 
+                    name=result['item']['name'], 
+                    email=result['item']['primary_email'],
+                    organization_id=result['item']['organization']['id'] if result['item']['organization'] else None,
+                    owner_id=result['item']['owner']['id'] if result['item']['owner'] else None,
+                    phone=result['item']['phones'][0] if result['item']['phones'] else '',
+                    job_title='',
+                    linkedin=''
+                ) 
+                for result in data
+            ]
+        
+        return []
+
     @staticmethod
     def create(**kwargs) -> 'Person':
         """
@@ -572,6 +627,61 @@ class Deal:
         return []
     
     @staticmethod
+    def get_deals_by_person_id(person_id: int) -> list['Deal']:	
+        """	
+        Retrieve Deals from Pipedrive by Person_id.	
+        	
+        :param person_id: int	
+        :return: list[Deal]	
+        """	
+
+        params = {
+            "person_id": person_id
+        }
+
+        url = encode_url(entity='deals', params=params, version='v2')
+
+        response = requests.get(url)
+        response_json = response.json()
+
+        data = response_json['data']
+        additional_data = response_json.get('additional_data', {'pagination': {'more_items_in_collection': False}})
+
+        while additional_data['pagination']['more_items_in_collection']:
+
+            new_url = url + f'&start={additional_data["pagination"]["next_start"]}'
+            response = requests.get(new_url)
+            response_json = response.json()
+
+            data += response_json['data']
+            additional_data = response_json.get('additional_data', {'pagination': {'more_items_in_collection': False}})
+
+        if data:
+            return [
+                Deal(
+                    id=result['id'],
+                    title=result['title'],
+                    org_id=result['org_id']['value'] if result['org_id'] else None,
+                    person_id=result['person_id']['value'] if result['person_id'] else None,
+                    stage_id=result['stage_id'],
+                    pipeline_id=result['pipeline_id'],
+                    owner_id=result['user_id']['id'] if result['user_id'] else None,
+                    channel=result['channel'],
+                    status=result['status'] if result['status'] else None,
+                    ads_id=result['67e90727a702feaee708eb4be15c896f1e4d125e'],
+                    campaign_id=result['90ee914e411f8e76eda8b270c576fa20ce945af6'],
+                    ad_name=result['cb5af1d8630657fc3ab4bb01c243f993141df2e7'],
+                    tag=result['70a34135774fbab2a37608d3d4c5da3be9dfa10a'],
+                    use_case=result['aa6cbdaafd283f46db835b902902f549e86bb915'],
+                    company_domain=result['34d3f450e4c96e0390b8dd9a7a034e7d64c53db0'],
+                    absrta_cloud_org_id=result['68396303430f23178b5bc6978b5b3021cf5eff47']
+                ) 
+                for result in data
+            ]
+            
+
+
+    @staticmethod
     def retrieve_by(
         company_domain: Optional[str] = None, 
         abstra_cloud_org_id: Optional[str] = None,
@@ -640,57 +750,6 @@ class Deal:
             ]
         
         return []
-
-    @staticmethod
-    def retrieve_by_phone(phone: str) -> list['Deal']:
-        """
-        Retrieve Deals from Pipedrive by phone.
-        :param phone: str
-        :return: list[Deal]
-        """
-
-        params = {
-            "fields": "custom_fields",
-            "term": phone,
-        }
-
-        url = encode_url(entity='deals', action='search', params=params)
-
-        response = requests.get(url)
-        response_json = response.json()
-
-        data = response_json['data'].get('items', [])
-        additional_data = response_json.get('additional_data', {'pagination': {'more_items_in_collection': False}})
-
-        while additional_data['pagination']['more_items_in_collection']:
-
-            new_url = url + f'&start={additional_data["pagination"]["next_start"]}'
-            response = requests.get(new_url)
-            response_json = response.json()
-
-            data += response_json['data'].get('items', [])
-            additional_data = response_json.get('additional_data', {'pagination': {'more_items_in_collection': False}})
-    
-        if data:
-            return [
-                Deal(
-                    id=result['item']['id'], 
-                    title=result['item']['title'],
-                    org_id=result['item']['organization']['id'] if result['item']['organization'] else None,
-                    person_id=result['item']['person']['id'] if result['item']['person'] else None,
-                    owner_id=result['item']['owner']['id'] if result['item']['owner'] else None,
-                    stage_id=result['item']['stage']['id'],
-                    status=result['item']['status'] if result['item']['status'] else None,
-                    pipeline_id=None,
-                    channel='',
-                    ads_id='',
-                    campaign_id='',
-                    ad_name='',
-                    tag='',
-                    use_case='',
-                ) 
-                for result in data
-            ]
 
 
     def update(self, **kwargs) -> 'Deal':
