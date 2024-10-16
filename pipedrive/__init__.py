@@ -640,6 +640,7 @@ class Deal:
         url = encode_url(entity='deals', params=params, version='v2')
 
         response = requests.get(url)
+        print(response.text)
         response_json = response.json()
 
         data = response_json['data']
@@ -649,6 +650,7 @@ class Deal:
 
             new_url = url + f'&cursor={additional_data['next_cursor']}'
             response = requests.get(new_url)
+            print(response.text)
             response_json = response.json()
 
             data += response_json['data']
