@@ -644,16 +644,17 @@ class Deal:
 
         data = response_json['data']
         additional_data = response_json.get('additional_data', {'next_cursor': None})
+        cursor = additional_data['next_cursor']
 
-        while additional_data['next_cursor']:
+        while cursor:
 
-            new_url = url + f'&cursor={additional_data['next_cursor']}'
+            new_url = url + f"&cursor={cursor}"
             response = requests.get(new_url)
             response_json = response.json()
 
             data += response_json['data']
             additional_data = response_json.get('additional_data', {'next_cursor': None})
-
+            cursor = additional_data['next_cursor']
         if data:
             return [
                 Deal(
