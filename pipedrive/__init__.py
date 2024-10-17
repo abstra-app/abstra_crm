@@ -3,7 +3,7 @@ import json
 from dataclasses import dataclass
 from .env_config import envs
 from urllib.parse import urlencode
-from typing import Optional
+from typing import Optional, Callable
 from datetime import datetime, timezone
 
 
@@ -695,6 +695,60 @@ class Deal:
             ]
 
         return []
+
+    @staticmethod
+    def from_dict(data: dict) -> "Deal":
+        return Deal(
+            id=data["id"],
+            title=data["title"],
+            org_id=data["org_id"]["value"] if data["org_id"] else None,
+            person_id=data["person_id"]["value"] if data["person_id"] else None,
+            stage_id=data["stage_id"],
+            pipeline_id=data["pipeline_id"],
+            owner_id=data["user_id"]["id"] if data["user_id"] else None,
+            channel=data["channel"],
+            ads_id=data["67e90727a702feaee708eb4be15c896f1e4d125e"],
+            campaign_id=data["90ee914e411f8e76eda8b270c576fa20ce945af6"],
+            ad_name=data["cb5af1d8630657fc3ab4bb01c243f993141df2e7"],
+            tag=data["70a34135774fbab2a37608d3d4c5da3be9dfa10a"],
+            use_case=data["aa6cbdaafd283f46db835b902902f549e86bb915"],
+            company_domain=data["34d3f450e4c96e0390b8dd9a7a034e7d64c53db0"],
+            absrta_cloud_org_id=data["68396303430f23178b5bc6978b5b3021cf5eff47"],
+            value=data["value"],
+            status=data["status"],
+            lost_reason=data["lost_reason"],
+            add_time=data["add_time"],
+            qualification_milestone=data["5abfbfa90d21348b998b9c259392182130d04647"],
+        )
+
+    @staticmethod
+    def filter(
+        filter_function: Callable[["Deal"], bool] = lambda _: True,
+    ) -> list["Deal"]:
+        url = encode_url(entity="deals", params={"limit": 200})
+
+        filtered_deals = []
+        additional_data = {"pagination": {"more_items_in_collection": True}}
+
+        while additional_data["pagination"]["more_items_in_collection"]:
+            response = requests.get(url)
+            response_json = response.json()
+
+            current_page_data = response_json["data"]
+            if current_page_data:
+                deal_list = [Deal.from_dict(result) for result in current_page_data]
+                filtered_deals = filtered_deals + list(
+                    filter(filter_function, deal_list)
+                )
+
+            additional_data = response_json.get(
+                "additional_data", {"pagination": {"more_items_in_collection": False}}
+            )
+
+            if additional_data["pagination"]["more_items_in_collection"]:
+                url += f'&start={additional_data["pagination"]["next_start"]}'
+
+        return filtered_deals
 
     @staticmethod
     def retrieve_by(
