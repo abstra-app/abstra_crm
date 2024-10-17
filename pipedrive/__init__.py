@@ -3,7 +3,7 @@ import json
 from dataclasses import dataclass
 from .env_config import envs
 from urllib.parse import urlencode
-from typing import Optional
+from typing import Optional, Callable
 from datetime import datetime, timezone
 
 
@@ -71,13 +71,13 @@ GENERIC_DOMAINS = generic_email_domains = [
 
 
 def encode_url(
-        entity: str, 
-        action: Optional[str] = None, 
-        entity_id: Optional[str] = None, 
-        subpath: Optional[str] = None, 
-        params: Optional[dict] = None,
-        version: Optional[str] = 'v1',    
-    ) -> str:
+    entity: str,
+    action: Optional[str] = None,
+    entity_id: Optional[str] = None,
+    subpath: Optional[str] = None,
+    params: Optional[dict] = None,
+    version: Optional[str] = "v1",
+) -> str:
     """
     Encode URL with query parameters.
 
@@ -86,9 +86,8 @@ def encode_url(
     :return: str
     """
 
-
-    base_url = f'https://{envs.company_domain}.pipedrive.com/api/{version}/{entity}'
-    url = ''
+    base_url = f"https://{envs.company_domain}.pipedrive.com/api/{version}/{entity}"
+    url = ""
 
     if action is None and entity_id is None:
         url = base_url
@@ -306,20 +305,20 @@ class Person:
         return []
 
     @staticmethod
-    def retrieve_by_phone(phone: str) -> list['Person']:
+    def retrieve_by_phone(phone: str) -> list["Person"]:
         """
         Retrieve persons from Pipedrive by phone.
-        
+
         :param phone: str
         :return: list[Person]
         """
 
         params = {
-            'fields': 'phone',
-            'term': phone,
+            "fields": "phone",
+            "term": phone,
         }
 
-        url = encode_url(entity='persons', action='search', params=params)
+        url = encode_url(entity="persons", action="search", params=params)
 
         response = requests.get(url)
         response_json = response.json()
@@ -328,34 +327,45 @@ class Person:
         print(response.text)
 
         # ! Temporary fix for the response
-        if 'data' not in response_json:
+        if "data" not in response_json:
             return []
 
-        data = response_json['data'].get('items', [])
-        additional_data = response_json.get('additional_data', {'pagination': {'more_items_in_collection': False}})
+        data = response_json["data"].get("items", [])
+        additional_data = response_json.get(
+            "additional_data", {"pagination": {"more_items_in_collection": False}}
+        )
 
-        while additional_data['pagination']['more_items_in_collection']:
-
+        while additional_data["pagination"]["more_items_in_collection"]:
             new_url = url + f'&start={additional_data["pagination"]["next_start"]}'
             response = requests.get(new_url)
             response_json = response.json()
 
-            data += response_json['data'].get('items', [])
-            additional_data = response_json.get('additional_data', {'pagination': {'more_items_in_collection': False}})
-        
+            data += response_json["data"].get("items", [])
+            additional_data = response_json.get(
+                "additional_data", {"pagination": {"more_items_in_collection": False}}
+            )
+
         if data:
             return [
                 Person(
-                    id=result['item']['id'], 
-                    name=result['item']['name'] if result['item']['name'] else '', 
-                    email=result['item']['primary_email'] if result['item']['primary_email'] else '',
-                    organization_id=result['item']['organization']['id'] if result['item']['organization'] else None,
-                    owner_id=result['item']['owner']['id'] if result['item']['owner'] else None,
-                    phone=result['item']['phones'][0] if result['item']['phones'] else '',
-                ) 
+                    id=result["item"]["id"],
+                    name=result["item"]["name"] if result["item"]["name"] else "",
+                    email=result["item"]["primary_email"]
+                    if result["item"]["primary_email"]
+                    else "",
+                    organization_id=result["item"]["organization"]["id"]
+                    if result["item"]["organization"]
+                    else None,
+                    owner_id=result["item"]["owner"]["id"]
+                    if result["item"]["owner"]
+                    else None,
+                    phone=result["item"]["phones"][0]
+                    if result["item"]["phones"]
+                    else "",
+                )
                 for result in data
             ]
-        
+
         return []
 
     @staticmethod
@@ -752,59 +762,110 @@ class Deal:
         return []
 
     @staticmethod
-    def get_deals_by_person_id(person_id: int) -> list['Deal']:	
-        """	
-        Retrieve Deals from Pipedrive by Person_id.	
-        	
-        :param person_id: int	
-        :return: list[Deal]	
-        """	
+    def get_deals_by_person_id(person_id: int) -> list["Deal"]:
+        """
+        Retrieve Deals from Pipedrive by Person_id.
 
-        params = {
-            "person_id": person_id
-        }
+        :param person_id: int
+        :return: list[Deal]
+        """
 
-        url = encode_url(entity='deals', params=params, version='v2')
+        params = {"person_id": person_id}
+
+        url = encode_url(entity="deals", params=params, version="v2")
 
         response = requests.get(url)
         response_json = response.json()
 
-        data = response_json['data']
-        additional_data = response_json.get('additional_data', {'next_cursor': None})
-        cursor = additional_data['next_cursor']
+        data = response_json["data"]
+        additional_data = response_json.get("additional_data", {"next_cursor": None})
+        cursor = additional_data["next_cursor"]
 
         while cursor:
-
             new_url = url + f"&cursor={cursor}"
             response = requests.get(new_url)
             response_json = response.json()
 
-            data += response_json['data']
-            additional_data = response_json.get('additional_data', {'next_cursor': None})
-            cursor = additional_data['next_cursor']
+            data += response_json["data"]
+            additional_data = response_json.get(
+                "additional_data", {"next_cursor": None}
+            )
+            cursor = additional_data["next_cursor"]
         if data:
             return [
                 Deal(
-                    id=result['id'],
-                    title=result['title'],
-                    org_id=result['org_id'],
-                    person_id=result['person_id'],
-                    stage_id=result['stage_id'],
-                    pipeline_id=result['pipeline_id'],
-                    owner_id=result['owner_id'],
-                    channel=result['channel'],
-                    status=result['status']
-                ) 
+                    id=result["id"],
+                    title=result["title"],
+                    org_id=result["org_id"],
+                    person_id=result["person_id"],
+                    stage_id=result["stage_id"],
+                    pipeline_id=result["pipeline_id"],
+                    owner_id=result["owner_id"],
+                    channel=result["channel"],
+                    status=result["status"],
+                )
                 for result in data
             ]
-            
 
+    @staticmethod
+    def from_dict(data: dict) -> "Deal":
+        return Deal(
+            id=data["id"],
+            title=data["title"],
+            org_id=data["org_id"]["value"] if data["org_id"] else None,
+            person_id=data["person_id"]["value"] if data["person_id"] else None,
+            stage_id=data["stage_id"],
+            pipeline_id=data["pipeline_id"],
+            owner_id=data["user_id"]["id"] if data["user_id"] else None,
+            channel=data["channel"],
+            ads_id=data["67e90727a702feaee708eb4be15c896f1e4d125e"],
+            campaign_id=data["90ee914e411f8e76eda8b270c576fa20ce945af6"],
+            ad_name=data["cb5af1d8630657fc3ab4bb01c243f993141df2e7"],
+            tag=data["70a34135774fbab2a37608d3d4c5da3be9dfa10a"],
+            use_case=data["aa6cbdaafd283f46db835b902902f549e86bb915"],
+            company_domain=data["34d3f450e4c96e0390b8dd9a7a034e7d64c53db0"],
+            absrta_cloud_org_id=data["68396303430f23178b5bc6978b5b3021cf5eff47"],
+            value=data["value"],
+            status=data["status"],
+            lost_reason=data["lost_reason"],
+            add_time=data["add_time"],
+            qualification_milestone=data["5abfbfa90d21348b998b9c259392182130d04647"],
+        )
+
+    @staticmethod
+    def filter(
+        filter_function: Callable[["Deal"], bool] = lambda _: True,
+    ) -> list["Deal"]:
+        url = encode_url(entity="deals", params={"limit": 200})
+
+        filtered_deals = []
+        additional_data = {"pagination": {"more_items_in_collection": True}}
+
+        while additional_data["pagination"]["more_items_in_collection"]:
+            response = requests.get(url)
+            response_json = response.json()
+
+            current_page_data = response_json["data"]
+            if current_page_data:
+                deal_list = [Deal.from_dict(result) for result in current_page_data]
+                filtered_deals = filtered_deals + list(
+                    filter(filter_function, deal_list)
+                )
+
+            additional_data = response_json.get(
+                "additional_data", {"pagination": {"more_items_in_collection": False}}
+            )
+
+            if additional_data["pagination"]["more_items_in_collection"]:
+                url += f'&start={additional_data["pagination"]["next_start"]}'
+
+        return filtered_deals
 
     @staticmethod
     def retrieve_by(
-        company_domain: Optional[str] = None, 
+        company_domain: Optional[str] = None,
         abstra_cloud_org_id: Optional[str] = None,
-    ) -> list['Deal']:
+    ) -> list["Deal"]:
         """
         Retrieve Deals from Pipedrive by Company_domain.
 
@@ -863,7 +924,6 @@ class Deal:
                     if result["item"]["owner"]
                     else None,
                     stage_id=result["item"]["stage"]["id"],
-
                     pipeline_id=None,
                     channel="",
                     ads_id="",
