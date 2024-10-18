@@ -464,6 +464,8 @@ class Deal:
         marketing_in_negotiation = 24
         marketing_trial_poc = 21
         marketing_closed = 22
+        marketing_contact_sent = 29
+        marketing_engaging = 28
 
         # sales pipeline
         sales_mapped = 1
