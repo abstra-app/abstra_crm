@@ -507,6 +507,19 @@ class Deal:
     class Tag:
         trial = "In Trial"
 
+    @dataclass
+    class Milestone:
+        contact_with_influencer = 35
+        contact_with_buyer = 36
+        contact_with_technical_decision_maker = 40
+        usecase_mapped = 37
+        urgency_for_usecase = 38
+        budget_available = 39
+        pricing_presented = 84
+        capable_editors = 41
+        appoved_by_technical_decision_maker = 42
+        appoved_by_buyer = 43
+
     def __init__(self, **kwargs):
         """
         :param id: int
