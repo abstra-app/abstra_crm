@@ -170,6 +170,8 @@ class Organization:
                 )
                 for result in data
             ]
+        else:
+            return []
 
         return []
 
@@ -301,8 +303,8 @@ class Person:
                 )
                 for result in data
             ]
-
-        return []
+        else:
+            return []
 
     @staticmethod
     def retrieve_by_phone(phone: str) -> list["Person"]:
@@ -365,8 +367,8 @@ class Person:
                 )
                 for result in data
             ]
-
-        return []
+        else:
+            return []
 
     @staticmethod
     def create(**kwargs) -> "Person":
@@ -773,8 +775,8 @@ class Deal:
                 )
                 for result in data
             ]
-
-        return []
+        else:
+            return []
 
     @staticmethod
     def get_deals_by_person_id(person_id: int) -> list["Deal"]:
@@ -821,6 +823,8 @@ class Deal:
                 )
                 for result in data
             ]
+        else:
+            return []
 
     @staticmethod
     def from_dict(data: dict) -> "Deal":
@@ -956,8 +960,8 @@ class Deal:
                 )
                 for result in data
             ]
-
-        return []
+        else:
+            return []
 
     def update(self, **kwargs) -> "Deal":
         """
@@ -1281,8 +1285,8 @@ class Activity:
                 )
                 for result in data
             ]
-
-        return []
+        else:
+            return []
 
     def update(self, **kwargs) -> "Activity":
         """
