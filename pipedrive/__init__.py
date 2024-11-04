@@ -948,10 +948,10 @@ class Deal:
                     use_case="",
                     company_domain=company_domain,
                     abstra_cloud_org_id=abstra_cloud_org_id,
-                    value=result["item"]["value"],
-                    status=result["item"]["status"],
-                    lost_reason=result["item"]["lost_reason"],
-                    add_time=result["item"]["add_time"],
+                    value=result["item"].get("value", ""),
+                    status=result["item"].get("status", ""),
+                    lost_reason=result["item"].get("lost_reason", ""),
+                    add_time=result["item"].get("add_time", ""),
                     qualification_milestone="",
                 )
                 for result in data
