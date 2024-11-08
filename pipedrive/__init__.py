@@ -238,6 +238,10 @@ class Person:
         :param phone: str
         :param job_title: str
         :param linkedin: str
+        :param sector: str
+        :param source_onboarding: str
+        :param python_experience: str
+        :param use_caes: str
         """
 
         self.id = kwargs.get("id", None)
@@ -248,6 +252,10 @@ class Person:
         self.phone = kwargs.get("phone", None)
         self.job_title = kwargs.get("job_title", None)
         self.linkedin = kwargs.get("linkedin", None)
+        self.sector = kwargs.get("sector", None)
+        self.source_onboarding = kwargs.get("source_onboarding", None)
+        self.python_experience = kwargs.get("python_experience", None)
+        self.use_caes = kwargs.get("use_caes", None)
 
     @staticmethod
     def retrieve_by(email: str) -> list["Person"]:
@@ -382,6 +390,10 @@ class Person:
         :param owner_id: int
         :param job_title: str
         :param linkedin: str
+        :param sector: str
+        :param source_onboarding: str
+        :param python_experience: str
+        :param use_caes: str
         :return: Person
         """
 
@@ -400,6 +412,18 @@ class Person:
             ),  # custom field
             "275f25452ed859a914f51cad90d349f92f1756ad": kwargs.get(
                 "linkedin", None
+            ),  # custom field
+            "e5052aa69761c292859b062cee70f346716ff46d": kwargs.get(
+                "sector", None
+            ),  # custom field
+            "eb87b28306ef62571f3e80e27a0818a7d1100577": kwargs.get(
+                "source_onboarding", None
+            ),  # custom field
+            "d22c30eae591e77b224b8665cbf856893801f6a3": kwargs.get(
+                "python_experience", None
+            ),  # custom field
+            "2588c17dd2b03c93f6301c9499221fa3dd41f4f1": kwargs.get(
+                "use_caes", None
             ),  # custom field
         }
 
@@ -433,6 +457,18 @@ class Person:
                 ],
                 linkedin=response_json["data"][
                     "275f25452ed859a914f51cad90d349f92f1756ad"
+                ],
+                sector=response_json["data"][
+                    "e5052aa69761c292859b062cee70f346716ff46d"
+                ],
+                source_onboarding=response_json["data"][
+                    "eb87b28306ef62571f3e80e27a0818a7d1100577"
+                ],
+                python_experience=response_json["data"][
+                    "d22c30eae591e77b224b8665cbf856893801f6a3"
+                ],
+                use_caes=response_json["data"][
+                    "2588c17dd2b03c93f6301c9499221fa3dd41f4f1"
                 ],
             )
 
