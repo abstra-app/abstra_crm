@@ -1344,13 +1344,20 @@ class Activity:
 
         data = {}
 
-        data["deal_id"] = kwargs.get("deal_id", self.deal_id)
-        data["subject"] = kwargs.get("subject", self.subject)
-        data["type"] = kwargs.get("type", self.type)
-        data["due_date"] = kwargs.get("due_date", self.due_date)
-        data["due_time"] = kwargs.get("due_time", self.due_time)
-        data["duration"] = kwargs.get("duration", self.duration)
-        data["done"] = kwargs.get("done", False)
+        if "deal_id" in kwargs:
+            data["deal_id"] = kwargs["deal_id"]
+        if "subject" in kwargs:
+            data["subject"] = kwargs["subject"]
+        if "type" in kwargs:
+            data["type"] = kwargs["type"]
+        if "due_date" in kwargs:
+            data["due_date"] = kwargs["due_date"]
+        if "due_time" in kwargs:
+            data["due_time"] = kwargs["due_time"]
+        if "duration" in kwargs:
+            data["duration"] = kwargs["duration"]
+        if "done" in kwargs:
+            data["done"] = kwargs["done"]
 
         if "note" in kwargs:
             note = kwargs["note"]
