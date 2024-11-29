@@ -233,6 +233,7 @@ class Person:
         :param id: int
         :param name: str
         :param email: str
+        :param emails: list[str]
         :param organization_id: int
         :param owner_id: int
         :param phone: str
@@ -247,6 +248,7 @@ class Person:
         self.id = kwargs.get("id", None)
         self.name = kwargs.get("name", None)
         self.email = kwargs.get("email", None)
+        self.emails = kwargs.get("emails", [])
         self.organization_id = kwargs.get("organization_id", None)
         self.owner_id = kwargs.get("owner_id", None)
         self.phone = kwargs.get("phone", None)
@@ -297,6 +299,7 @@ class Person:
                     id=result["item"]["id"],
                     name=result["item"]["name"],
                     email=result["item"]["primary_email"],
+                    emails=result["item"]["emails"],
                     organization_id=result["item"]["organization"]["id"]
                     if result["item"]["organization"]
                     else None,
@@ -363,6 +366,7 @@ class Person:
                     email=result["item"]["primary_email"]
                     if result["item"]["primary_email"]
                     else "",
+                    emails=result["item"]["emails"],
                     organization_id=result["item"]["organization"]["id"]
                     if result["item"]["organization"]
                     else None,
@@ -386,6 +390,7 @@ class Person:
         :param name: str
         :param org_id: int
         :param email: str
+        :param emails: list[dict] [{"label": str, "value": str, primary: bool}]
         :param phone: str
         :param owner_id: int
         :param job_title: str
@@ -401,10 +406,14 @@ class Person:
             print("name is required")
             return None
 
+        email_field = kwargs.get("emails", [])
+        if len(email_field) == 0:
+            email_field = kwargs.get("email", None)
+
         data = {
             "name": kwargs["name"],
             "org_id": kwargs.get("org_id", None),
-            "email": kwargs.get("email", None),
+            "email": email_field,
             "phone": kwargs.get("phone", None),
             "owner_id": kwargs.get("owner_id", None),
             "f746ba550001ac6682ab9d4e1b8f44999217250c": kwargs.get(
