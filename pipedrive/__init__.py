@@ -551,7 +551,7 @@ class Deal:
         outbound = "Outbound"
         product = "Product"
         cubo = "Cubo"
-        fre_mvp = 107
+        free_mvp = 107
 
     @dataclass
     class Tag:
