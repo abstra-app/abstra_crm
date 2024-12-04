@@ -1,7 +1,6 @@
 import requests
 import json
 from dataclasses import dataclass
-from .env_config import envs
 from urllib.parse import urlencode
 from typing import Optional, Callable
 from datetime import datetime, timezone
@@ -551,6 +550,7 @@ class Deal:
         outbound = "Outbound"
         product = "Product"
         cubo = "Cubo"
+        fre_mvp = 107
 
     @dataclass
     class Tag:
