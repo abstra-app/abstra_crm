@@ -591,6 +591,8 @@ class Deal:
         :param qualification_milestone: comma separated string
         :param status: str
         :param lost_reason: str
+        :param expected_close_date: str
+        :param probability: float
         :param add_time: str iso format
         """
 
@@ -613,6 +615,8 @@ class Deal:
         self.qualification_milestone = kwargs.get("qualification_milestone", None)
         self.status = kwargs.get("status", None)
         self.lost_reason = kwargs.get("lost_reason", None)
+        self.expected_close_date = kwargs.get("expected_close_date", None)
+        self.probability = kwargs.get("probability", None)
         self.add_time = kwargs.get("add_time", None)
 
     @property
@@ -773,7 +777,7 @@ class Deal:
 
         response = requests.get(url)
         response_json = response.json()
-
+        print(response_json)
         data = response_json["data"]
         additional_data = response_json.get(
             "additional_data", {"pagination": {"more_items_in_collection": False}}
@@ -814,6 +818,8 @@ class Deal:
                     value=result["value"],
                     status=result["status"],
                     lost_reason=result["lost_reason"],
+                    expected_close_date=result.get("expected_close_date", None),
+                    probability=result.get("probability", None),
                     add_time=result["add_time"],
                     qualification_milestone=result[
                         "5abfbfa90d21348b998b9c259392182130d04647"
