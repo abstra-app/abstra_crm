@@ -815,7 +815,6 @@ class Deal:
         response = requests.get(url)
         response_json = response.json()
         data = response_json["data"]
-        print(data)
         additional_data = response_json.get(
             "additional_data", {"pagination": {"more_items_in_collection": False}}
         )
