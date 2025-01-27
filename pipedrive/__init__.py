@@ -538,6 +538,7 @@ class Deal:
         sophia = 21976836
         marcelo = 21976847
         bruno = 21985174
+        roberto = 22478491
 
     @dataclass
     class Channel:
@@ -581,7 +582,9 @@ class Deal:
         :param ad_name: str
         :param stage_id: int
         :param pipeline_id: int
+        :param pipeline: str
         :param owner_id: int
+        :param owner_name: str
         :param channel: str
         :param tag: str
         :param use_case: str
@@ -592,8 +595,9 @@ class Deal:
         :param status: str
         :param lost_reason: str
         :param expected_close_date: str
-        :param probability: float
+        :param deal_probability: float
         :param add_time: str iso format
+        :param next_activity_date: str iso format
         """
 
         self.id = kwargs.get("id", None)
@@ -604,7 +608,9 @@ class Deal:
         self.campaign_id = kwargs.get("campaign_id", None)
         self.stage_id = kwargs.get("stage_id", None)
         self.pipeline_id = kwargs.get("pipeline_id", None)
+        self.pipeline = self.deal_pipeline
         self.owner_id = kwargs.get("owner_id", None)
+        self.owner_name = kwargs.get("owner_name", None) if kwargs.get("owner_name", None) else self.deal_owner
         self.channel = kwargs.get("channel", None)
         self.ad_name = kwargs.get("ad_name", None)
         self.tag = kwargs.get("tag", None)
@@ -616,8 +622,39 @@ class Deal:
         self.status = kwargs.get("status", None)
         self.lost_reason = kwargs.get("lost_reason", None)
         self.expected_close_date = kwargs.get("expected_close_date", None)
-        self.probability = kwargs.get("probability", None)
+        self.deal_probability = kwargs.get("deal_probability", None)
         self.add_time = kwargs.get("add_time", None)
+        self.next_activity_date = kwargs.get("next_activity_date", None)
+
+
+    @property 
+    def deal_owner(self):
+        if self.owner_id == self.Owner.jessica:
+            return "Jessica"
+        elif self.owner_id == self.Owner.sophia:
+            return "Sophia"
+        elif self.owner_id == self.Owner.marcelo:
+            return "Marcelo"
+        elif self.owner_id == self.Owner.bruno:
+            return "Bruno Costa"
+        elif self.owner_id == self.Owner.roberto:
+            return "Roberto"
+        else:
+            return None
+
+
+    @property 
+    def deal_pipeline(self):
+        if self.pipeline_id == self.Pipeline.sales:
+            return "Sales"
+        elif self.pipeline_id == self.Pipeline.trial:
+            return "Trial"
+        elif self.pipeline_id == self.Pipeline.cs:
+            return "CS"
+        elif self.pipeline_id == self.Pipeline.marketing:
+            return "Marketing"
+        else:
+            return None
 
     @property
     def is_meeting_scheduled_or_after(self):
@@ -772,13 +809,13 @@ class Deal:
             )
 
     @staticmethod
-    def get_all_deals() -> list["Deal"]:
-        url = encode_url(entity="deals", params={"limit": 500})
+    def get_all_deals(api_key:str) -> list["Deal"]:
+        url = encode_url(entity="deals", params={"limit": 500}, api_key=api_key)
 
         response = requests.get(url)
         response_json = response.json()
-        print(response_json)
         data = response_json["data"]
+        print(data)
         additional_data = response_json.get(
             "additional_data", {"pagination": {"more_items_in_collection": False}}
         )
@@ -805,6 +842,7 @@ class Deal:
                     stage_id=result["stage_id"],
                     pipeline_id=result["pipeline_id"],
                     owner_id=result["user_id"]["id"] if result["user_id"] else None,
+                    owner_name = result["user_id"]["name"] if result["user_id"] else None,
                     channel=result["channel"],
                     ads_id=result["67e90727a702feaee708eb4be15c896f1e4d125e"],
                     campaign_id=result["90ee914e411f8e76eda8b270c576fa20ce945af6"],
@@ -819,11 +857,12 @@ class Deal:
                     status=result["status"],
                     lost_reason=result["lost_reason"],
                     expected_close_date=result.get("expected_close_date", None),
-                    probability=result.get("probability", None),
+                    deal_probability=result.get("deal_probability", None),
                     add_time=result["add_time"],
                     qualification_milestone=result[
                         "5abfbfa90d21348b998b9c259392182130d04647"
                     ],
+                    next_activity_date=result.get("next_activity_date", None),
                 )
                 for result in data
             ]
