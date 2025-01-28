@@ -1203,6 +1203,35 @@ class Deal:
             print(f"Error adding participant to deal - {e}")
             return None
 
+    def to_dict(self) -> dict:
+        return {
+            "id": self.id,
+            "title": self.title,
+            "org_id": self.org_id,
+            "person_id": self.person_id,
+            "ads_id": self.ads_id,
+            "campaign_id": self.campaign_id,
+            "ad_name": self.ad_name,
+            "stage_id": self.stage_id,
+            "pipeline_id": self.pipeline_id,
+            "pipeline": self.pipeline,
+            "owner_id": self.owner_id,
+            "owner_name": self.owner_name,
+            "channel": self.channel,
+            "deal_probability": self.deal_probability,
+            "tag": self.tag,
+            "use_case": self.use_case,
+            "company_domain": self.company_domain,
+            "abstra_cloud_org_id": self.abstra_cloud_org_id,
+            "value": self.value,
+            "qualification_milestone": self.qualification_milestone,
+            "status": self.status,
+            "lost_reason": self.lost_reason,
+            "expected_close_date": self.expected_close_date,
+            "add_time": self.add_time,
+            "next_activity_date": self.next_activity_date,
+        }
+
 
 class Activity:
     @dataclass
@@ -1456,6 +1485,22 @@ class Activity:
                 note=response_json["data"]["note"],
                 done=response_json["data"]["done"],
             )
+
+    def to_dict(self) -> dict:
+        return {
+            "id": self.id,
+            "deal_id": self.deal_id,
+            "subject": self.subject,
+            "type": self.type,
+            "due_date": self.due_date,
+            "due_time": self.due_time,
+            "duration": self.duration,
+            "org_id": self.org_id,
+            "person_id": self.person_id,
+            "note": self.note,
+            "done": self.done,
+            "participants_ids": self.participants_ids,
+        }
 
     @staticmethod
     def current_date():
