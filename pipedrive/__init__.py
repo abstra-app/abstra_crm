@@ -809,8 +809,8 @@ class Deal:
             )
 
     @staticmethod
-    def get_all_deals(api_key:str) -> list["Deal"]:
-        url = encode_url(entity="deals", params={"limit": 500}, api_key=api_key)
+    def get_all_deals() -> list["Deal"]:
+        url = encode_url(entity="deals", params={"limit": 500})
 
         response = requests.get(url)
         response_json = response.json()
