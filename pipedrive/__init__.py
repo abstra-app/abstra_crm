@@ -4,8 +4,7 @@ from dataclasses import dataclass
 from urllib.parse import urlencode
 from typing import Optional, Callable
 from datetime import datetime, timezone
-from env_config import envs
-import dotenv
+from .env_config import envs
 
 
 CONTENT_TYPE = "application/json"
@@ -1558,34 +1557,3 @@ class Notes:
                 content=response_json["data"]["content"],
             )
 
-
-if __name__ == "__main__":
-    
-    dotenv.load_dotenv()
-    url = encode_url(entity="deals", params={"limit": 500})
-
-    response = requests.get(url)
-    response_json = response.json()
-    data = response_json["data"]
-    additional_data = response_json.get(
-        "additional_data", {"pagination": {"more_items_in_collection": False}}
-    )
-
-    while additional_data["pagination"]["more_items_in_collection"]:
-        new_url = url + f'&start={additional_data["pagination"]["next_start"]}'
-        response = requests.get(new_url)
-        response_json = response.json()
-
-        data += response_json["data"]
-        additional_data = response_json.get(
-            "additional_data", {"pagination": {"more_items_in_collection": False}}
-        )
-
-    ids = []
-    for d in data:
-        if 'teset' not in d['title']:
-            continue
-        if d['pipeline_id'] != 3:
-            continue
-        print(f"title: {d['title']}, pipeline id: {d['stage_id']}")
-        ids.append(d['stage_id'])
