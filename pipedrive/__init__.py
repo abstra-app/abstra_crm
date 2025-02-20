@@ -4,7 +4,8 @@ from dataclasses import dataclass
 from urllib.parse import urlencode
 from typing import Optional, Callable
 from datetime import datetime, timezone
-from .env_config import envs
+from env_config import envs
+import dotenv
 
 
 CONTENT_TYPE = "application/json"
@@ -496,41 +497,39 @@ class Deal:
     @dataclass
     class Pipeline:
         sales = 1
-        trial = 2
-        cs = 3
-        marketing = 4
+        pre_sales = 4
+        cs_upsell = 5
+        cs_accounts = 3
 
     @dataclass
     class Stage:
-        # marketing pipeline
-        marketing_new_lead = 18
-        marketing_mql = 19
-        marketing_meeting_scheduled = 27
-        marketing_sql = 20
-        marketing_qualified_op = 23
-        marketing_in_negotiation = 24
-        marketing_trial_poc = 21
-        marketing_closed = 22
-        marketing_contact_sent = 29
-        marketing_engaging = 28
+        # pre sales pipeline
+        pre_sales_new_lead = 18
+        pre_sales_contract_sent = 29
+        pre_sales_mql = 19
+        pre_sales_engaging = 28
 
         # sales pipeline
-        sales_mapped = 1
-        sales_prospected = 2
-        sales_engaging = 26
-        sales_meeting_scheduled = 3
-        sales_meeting_realized = 4
-        sales_qualified = 16
-        sales_in_negotiation = 5
-        sales_poc = 25
-        sales_closed = 17
+        sales_sql = 16
+        sales_sqo = 37
+        sales_proving_value = 38
+        sales_negotiation = 5
+        sales_contract = 30
+        sales_won = 17
 
-        # trial pipeline
-        trial_started = 6
-        trial_engaged = 7
-        trial_meeting_scheduled = 8
-        trial_meeting_realized = 9
-        trial_closed = 10
+        # cs accounts pipeline
+        cs_accounts_onboarding = 11
+        cs_accounts_engaging = 12
+        cs_accounts_at_risk = 31
+        cs_accounts_renew_contract = 13
+        cs_accounts_upsell_opportunity = 14
+
+        # cs upsell pipeline
+        cs_upsell_discovery = 32
+        cs_upsell_opp_mapped = 33
+        cs_upsell_poc = 34
+        cs_upsell_proposal_sent = 35
+        cs_upsell_closed_or_won = 36
 
     @dataclass
     class Owner:
@@ -1558,3 +1557,35 @@ class Notes:
                 deal_id=response_json["data"]["deal_id"],
                 content=response_json["data"]["content"],
             )
+
+
+if __name__ == "__main__":
+    
+    dotenv.load_dotenv()
+    url = encode_url(entity="deals", params={"limit": 500})
+
+    response = requests.get(url)
+    response_json = response.json()
+    data = response_json["data"]
+    additional_data = response_json.get(
+        "additional_data", {"pagination": {"more_items_in_collection": False}}
+    )
+
+    while additional_data["pagination"]["more_items_in_collection"]:
+        new_url = url + f'&start={additional_data["pagination"]["next_start"]}'
+        response = requests.get(new_url)
+        response_json = response.json()
+
+        data += response_json["data"]
+        additional_data = response_json.get(
+            "additional_data", {"pagination": {"more_items_in_collection": False}}
+        )
+
+    ids = []
+    for d in data:
+        if 'teset' not in d['title']:
+            continue
+        if d['pipeline_id'] != 3:
+            continue
+        print(f"title: {d['title']}, pipeline id: {d['stage_id']}")
+        ids.append(d['stage_id'])
