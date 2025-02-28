@@ -1579,3 +1579,74 @@ class Notes:
                 lead_id=response_json["data"].get("lead_id"),
                 content=response_json["data"]["content"],
             )
+        
+
+class Lead:
+
+    @dataclass
+    class Channel:
+        none = "(None)"
+        rpf = "RPF"
+        personal_network = "Personal Network"
+        event = "Event"
+        google_ads = "Google Ads"
+        linkedin_ads = "Linkedin Ads"
+        website_demo = "Website Demo"
+        outbound = "Outbound"
+        product = "Product"
+        cubo = "Cubo"
+        phantombuster_auto = "Automatic Prospecting on Linkedin"
+        free_mvp = 107
+
+    def create(**kwargs) -> "Lead":
+        """
+        :param title: str
+        :param owner_id: int
+        :param person_id: int
+        :param org_id: int
+        :param origin_id: str 
+        :param channel: str
+        """
+
+        if "title" not in kwargs:
+            print("title is required")
+            return None
+
+        data = {
+            "title": kwargs["title"],
+            "user_id": kwargs.get("owner_id", None),
+            "person_id": kwargs.get("person_id", None),
+            "org_id": kwargs.get("org_id", None),
+            "origin_id": kwargs.get("origin_id", None),
+            "channel": kwargs.get("channel", None),
+        }
+
+        url = encode_url(entity="leads")
+
+        try:
+            response = requests.post(
+                url, data=json.dumps(data), headers={"Content-Type": CONTENT_TYPE}
+            )
+            response.raise_for_status()
+        except Exception as e:
+            print(f"Error creating lead - {e}")
+            return None
+
+        response_json = response.json()
+
+        if response_json["success"]:
+            return Lead(
+                id=response_json["data"]["id"],
+                title=response_json["data"]["title"],
+                owner_id=response_json["data"]["user_id"]["id"]
+                if response_json["data"]["user_id"]
+                else None,
+                person_id=response_json["data"]["person_id"]["value"]
+                if response_json["data"]["person_id"]
+                else None,
+                org_id=response_json["data"]["org_id"]["value"]
+                if response_json["data"]["org_id"]
+                else None,
+                origin_id=response_json["data"]["origin_id"],
+                channel=response_json["data"]["channel"],
+            )
