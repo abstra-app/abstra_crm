@@ -43,12 +43,13 @@ This ORM facilitates interaction with Pipedrive's API, specifically for managing
 
 #### Methods:
 
-1. **retrieve_by(email: str) -> List[Person]**
+1. **retrieve_by(query_name: str, query_value: str) -> List[Person]**
 
-   **Description**: Retrieves person from Pipedrive based on the email address provided.
+   **Description**: Retrieves person from Pipedrive based on the query provided.
 
    **Inputs**:
-   - `email` (str): The email of the person to search for.
+   - `query_name` (str): The field you want to use as filter for people.
+   - `query_value` (str): The value of the field you want to use as filter for people
  
 
 2. **create(kwargs) -> Person**

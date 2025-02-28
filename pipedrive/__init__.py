@@ -228,6 +228,16 @@ class Organization:
 
 
 class Person:
+
+    @dataclass
+    class CustomFields:
+        job_title = "f746ba550001ac6682ab9d4e1b8f44999217250c"
+        linkedin = "275f25452ed859a914f51cad90d349f92f1756ad"
+        sector = "e5052aa69761c292859b062cee70f346716ff46d"
+        source_onboarding = "eb87b28306ef62571f3e80e27a0818a7d1100577"
+        python_experience = "d22c30eae591e77b224b8665cbf856893801f6a3"
+        use_cases = "2588c17dd2b03c93f6301c9499221fa3dd41f4f1"
+
     def __init__(self, **kwargs):
         """
         :param id: int
@@ -262,7 +272,7 @@ class Person:
         self.use_cases = kwargs.get("use_cases", None)
 
     @staticmethod
-    def retrieve_by(email: str) -> list["Person"]:
+    def retrieve_by(query_name: str, query_value: str) -> list["Person"]:
         """
         Retrieve persons from Pipedrive by email.
 
@@ -271,8 +281,8 @@ class Person:
         """
 
         params = {
-            "fields": "email",
-            "term": email,
+            "fields": query_name,
+            "term": query_value,
         }
 
         url = encode_url(entity="persons", action="search", params=params)
@@ -338,9 +348,6 @@ class Person:
 
         response = requests.get(url)
         response_json = response.json()
-
-        # ! Remove this line after testing
-        print(response.text)
 
         # ! Temporary fix for the response
         if "data" not in response_json:
