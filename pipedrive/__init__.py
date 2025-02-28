@@ -564,6 +564,7 @@ class Deal:
         outbound = "Outbound"
         product = "Product"
         cubo = "Cubo"
+        phantombuster_auto = "Automatic Prospecting on Linkedin"
         free_mvp = 107
 
     @dataclass
@@ -1528,11 +1529,13 @@ class Notes:
         """
         :param id: int
         :param deal_id: int
+        :param person_id: int
         :param content: str
         """
 
         self.id = kwargs.get("id", None)
         self.deal_id = kwargs.get("deal_id", None)
+        self.person_id = kwargs.get("person_id", None)
         self.content = kwargs.get("content", None)
 
     @staticmethod
@@ -1541,17 +1544,22 @@ class Notes:
         Create a new note in Pipedrive.
 
         :param deal_id: int
+        :param person_id: int
         :param content: str
         :return: Notes
         """
 
-        if "deal_id" not in kwargs or "content" not in kwargs:
+        if ("deal_id" not in kwargs and "person_id" not in kwargs) or "content" not in kwargs:
             print("deal_id and content are required")
             return None
 
         url = encode_url(entity="notes")
 
-        data = {"deal_id": kwargs["deal_id"], "content": kwargs["content"]}
+        data = {
+            "deal_id": kwargs.get("deal_id"),
+            "person_id": kwargs.get("person_id"),
+            "content": kwargs["content"]
+        }
 
         try:
             response = requests.post(
@@ -1567,7 +1575,7 @@ class Notes:
         if response_json["success"]:
             return Notes(
                 id=response_json["data"]["id"],
-                deal_id=response_json["data"]["deal_id"],
+                deal_id=response_json["data"].get("deal_id"),
+                person_id=response_json["data"].get("person_id"),
                 content=response_json["data"]["content"],
             )
-
