@@ -276,7 +276,8 @@ class Person:
         """
         Retrieve persons from Pipedrive by email.
 
-        :param email: str
+        :param query_name: str
+        :param query_value: str
         :return: list[Person]
         """
 
@@ -428,22 +429,22 @@ class Person:
             "phone": kwargs.get("phone", None),
             "owner_id": kwargs.get("owner_id", None),
             "origin_id": kwargs.get("origin_id", None),
-            "f746ba550001ac6682ab9d4e1b8f44999217250c": kwargs.get(
+            Person.CustomFields.job_title: kwargs.get(
                 "job_title", None
             ),  # custom field
-            "275f25452ed859a914f51cad90d349f92f1756ad": kwargs.get(
+            Person.CustomFields.linkedin: kwargs.get(
                 "linkedin", None
             ),  # custom field
-            "e5052aa69761c292859b062cee70f346716ff46d": kwargs.get(
+            Person.CustomFields.sector: kwargs.get(
                 "sector", None
             ),  # custom field
-            "eb87b28306ef62571f3e80e27a0818a7d1100577": kwargs.get(
+            Person.CustomFields.source_onboarding: kwargs.get(
                 "source_onboarding", None
             ),  # custom field
-            "d22c30eae591e77b224b8665cbf856893801f6a3": kwargs.get(
+            Person.CustomFields.python_experience: kwargs.get(
                 "python_experience", None
             ),  # custom field
-            "2588c17dd2b03c93f6301c9499221fa3dd41f4f1": kwargs.get(
+            Person.CustomFields.use_cases: kwargs.get(
                 "use_cases", None
             ),  # custom field
         }
@@ -475,22 +476,22 @@ class Person:
                 if response_json["data"]["phone"]
                 else None,
                 job_title=response_json["data"][
-                    "f746ba550001ac6682ab9d4e1b8f44999217250c"
+                    Person.CustomFields.job_title
                 ],
                 linkedin=response_json["data"][
-                    "275f25452ed859a914f51cad90d349f92f1756ad"
+                    Person.CustomFields.linkedin
                 ],
                 sector=response_json["data"][
-                    "e5052aa69761c292859b062cee70f346716ff46d"
+                    Person.CustomFields.sector
                 ],
                 source_onboarding=response_json["data"][
-                    "eb87b28306ef62571f3e80e27a0818a7d1100577"
+                    Person.CustomFields.source_onboarding
                 ],
                 python_experience=response_json["data"][
-                    "d22c30eae591e77b224b8665cbf856893801f6a3"
+                    Person.CustomFields.python_experience
                 ],
                 use_cases=response_json["data"][
-                    "2588c17dd2b03c93f6301c9499221fa3dd41f4f1"
+                    Person.CustomFields.use_cases
                 ],
             )
 
