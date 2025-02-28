@@ -1529,13 +1529,13 @@ class Notes:
         """
         :param id: int
         :param deal_id: int
-        :param person_id: int
+        :param lead_id: int
         :param content: str
         """
 
         self.id = kwargs.get("id", None)
         self.deal_id = kwargs.get("deal_id", None)
-        self.person_id = kwargs.get("person_id", None)
+        self.lead_id = kwargs.get("lead_id", None)
         self.content = kwargs.get("content", None)
 
     @staticmethod
@@ -1544,20 +1544,20 @@ class Notes:
         Create a new note in Pipedrive.
 
         :param deal_id: int
-        :param person_id: int
+        :param lead_id: int
         :param content: str
         :return: Notes
         """
 
-        if ("deal_id" not in kwargs and "person_id" not in kwargs) or "content" not in kwargs:
-            print("deal_id and content are required")
+        if ("deal_id" not in kwargs and "lead_id" not in kwargs) or "content" not in kwargs:
+            print("deal_id or lead_id and content are required")
             return None
 
         url = encode_url(entity="notes")
 
         data = {
             "deal_id": kwargs.get("deal_id"),
-            "person_id": kwargs.get("person_id"),
+            "lead_id": kwargs.get("lead_id"),
             "content": kwargs["content"]
         }
 
@@ -1576,6 +1576,6 @@ class Notes:
             return Notes(
                 id=response_json["data"]["id"],
                 deal_id=response_json["data"].get("deal_id"),
-                person_id=response_json["data"].get("person_id"),
+                lead_id=response_json["data"].get("lead_id"),
                 content=response_json["data"]["content"],
             )
