@@ -590,6 +590,7 @@ class Deal:
         :param ad_name: str
         :param stage_id: int
         :param pipeline_id: int
+        :param origin_id: str
         :param owner_id: int
         :param owner_name: str
         :param channel: str
@@ -616,6 +617,7 @@ class Deal:
         self.stage_id = kwargs.get("stage_id", None)
         self.pipeline_id = kwargs.get("pipeline_id", None)
         self.owner_id = kwargs.get("owner_id", None)
+        self.origin_id = kwargs.get("origin_id", None)
         self.owner_name = kwargs.get("owner_name", None) if kwargs.get("owner_name", None) else self.deal_owner
         self.channel = kwargs.get("channel", None)
         self.ad_name = kwargs.get("ad_name", None)
@@ -697,6 +699,7 @@ class Deal:
         :param stage_id: int
         :param pipeline_id: int
         :param owner_id: int
+        :param origin_id: str
         :param channel: str
         :param ads_id: str
         :param campaign_id: str
@@ -728,6 +731,7 @@ class Deal:
             "stage_id": kwargs.get("stage_id", None),
             "pipeline_id": kwargs.get("pipeline_id", None),
             "user_id": kwargs.get("owner_id", None),
+            "origin_id": kwargs.get("origin_id", None),
             "channel": kwargs.get("channel", None),
             "67e90727a702feaee708eb4be15c896f1e4d125e": kwargs.get(
                 "ads_id", None
@@ -778,6 +782,7 @@ class Deal:
                 org_id=response_json["data"]["org_id"]["value"]
                 if response_json["data"]["org_id"]
                 else None,
+                origin_id=response_json["data"].get("origin_id"),
                 person_id=response_json["data"]["person_id"]["value"]
                 if response_json["data"]["person_id"]
                 else None,
@@ -847,6 +852,7 @@ class Deal:
                     else None,
                     stage_id=result["stage_id"],
                     pipeline_id=result["pipeline_id"],
+                    origin_id=response_json["data"].get("origin_id"),
                     owner_id=result["user_id"]["id"] if result["user_id"] else None,
                     owner_name = result["user_id"]["name"] if result["user_id"] else None,
                     channel=result["channel"],
