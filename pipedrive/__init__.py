@@ -1580,18 +1580,7 @@ class Lead:
 
     @dataclass
     class Channel:
-        none = "(None)"
-        rpf = "RPF"
-        personal_network = "Personal Network"
-        event = "Event"
-        google_ads = "Google Ads"
-        linkedin_ads = "Linkedin Ads"
-        website_demo = "Website Demo"
-        outbound = "Outbound"
-        product = "Product"
-        cubo = "Cubo"
-        phantombuster_auto = "Automatic Prospecting on LinkedIn"
-        free_mvp = 107
+        phantombuster_auto = 97
 
     def __init__(self, **kwargs) -> None:
         """
