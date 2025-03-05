@@ -590,7 +590,6 @@ class Deal:
         :param ad_name: str
         :param stage_id: int
         :param pipeline_id: int
-        :param pipeline: str
         :param owner_id: int
         :param owner_name: str
         :param channel: str
@@ -616,7 +615,6 @@ class Deal:
         self.campaign_id = kwargs.get("campaign_id", None)
         self.stage_id = kwargs.get("stage_id", None)
         self.pipeline_id = kwargs.get("pipeline_id", None)
-        self.pipeline = self.deal_pipeline
         self.owner_id = kwargs.get("owner_id", None)
         self.owner_name = kwargs.get("owner_name", None) if kwargs.get("owner_name", None) else self.deal_owner
         self.channel = kwargs.get("channel", None)
@@ -655,12 +653,12 @@ class Deal:
     def deal_pipeline(self):
         if self.pipeline_id == self.Pipeline.sales:
             return "Sales"
-        elif self.pipeline_id == self.Pipeline.trial:
-            return "Trial"
-        elif self.pipeline_id == self.Pipeline.cs:
-            return "CS"
-        elif self.pipeline_id == self.Pipeline.marketing:
-            return "Marketing"
+        elif self.pipeline_id == self.Pipeline.pre_sales:
+            return "Pre Sales"
+        elif self.pipeline_id == self.Pipeline.cs_upsell:
+            return "CS Upsell"
+        elif self.pipeline_id == self.Pipeline.cs_accounts:
+            return "CS Accounts"
         else:
             return None
 
