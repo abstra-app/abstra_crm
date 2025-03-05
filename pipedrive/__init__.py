@@ -559,7 +559,7 @@ class Deal:
         outbound = "Outbound"
         product = "Product"
         cubo = "Cubo"
-        phantombuster_auto = "Automatic Prospecting on Linkedin"
+        phantombuster_auto = "Automatic Prospecting on LinkedIn"
         free_mvp = 107
 
     @dataclass
@@ -1592,7 +1592,7 @@ class Lead:
         outbound = "Outbound"
         product = "Product"
         cubo = "Cubo"
-        phantombuster_auto = "Automatic Prospecting on Linkedin"
+        phantombuster_auto = "Automatic Prospecting on LinkedIn"
         free_mvp = 107
 
     def __init__(self, **kwargs) -> None:
