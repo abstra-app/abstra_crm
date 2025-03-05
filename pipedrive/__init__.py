@@ -246,7 +246,6 @@ class Person:
         :param emails: list[str]
         :param organization_id: int
         :param owner_id: int
-        :param origin_id: str
         :param phone: str
         :param job_title: str
         :param linkedin: str
@@ -262,7 +261,6 @@ class Person:
         self.emails = kwargs.get("emails", [])
         self.organization_id = kwargs.get("organization_id", None)
         self.owner_id = kwargs.get("owner_id", None)
-        self.origin_id = kwargs.get("origin_id", None)
         self.phone = kwargs.get("phone", None)
         self.job_title = kwargs.get("job_title", None)
         self.linkedin = kwargs.get("linkedin", None)
@@ -324,7 +322,6 @@ class Person:
                     else "",
                     job_title="",
                     linkedin="",
-                    origin_id=result["item"].get("origin_id", None),
                 )
                 for result in data
             ]
@@ -404,7 +401,6 @@ class Person:
         :param emails: list[dict] [{"label": str, "value": str, primary: bool}]
         :param phone: str
         :param owner_id: int
-        :param origin_id: str
         :param job_title: str
         :param linkedin: str
         :param sector: str
@@ -428,7 +424,6 @@ class Person:
             "email": email_field,
             "phone": kwargs.get("phone", None),
             "owner_id": kwargs.get("owner_id", None),
-            "origin_id": kwargs.get("origin_id", None),
             Person.CustomFields.job_title: kwargs.get(
                 "job_title", None
             ),  # custom field
@@ -469,7 +464,6 @@ class Person:
                 name=response_json["data"]["name"],
                 email=response_json["data"]["primary_email"],
                 organization_id=response_json["data"]["org_id"],
-                origin_id=response_json["data"].get("origin_id", None),
                 owner_id=response_json["data"]["owner_id"]["id"]
                 if response_json["data"]["owner_id"]
                 else None,
