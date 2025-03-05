@@ -1625,7 +1625,7 @@ class Lead:
             "title": kwargs["title"],
             "owner_id": kwargs.get("owner_id", None),
             "person_id": kwargs.get("person_id", None),
-            "org_id": kwargs.get("org_id", None),
+            "organization_id": kwargs.get("org_id", None),
             "origin_id": kwargs.get("origin_id", None),
             "channel": kwargs.get("channel", None),
         }
