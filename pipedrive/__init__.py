@@ -1527,7 +1527,7 @@ class Activity:
 class Notes:
     def __init__(self, **kwargs) -> None:
         """
-        :param id: int
+        :param id: str
         :param deal_id: int
         :param lead_id: int
         :param content: str
@@ -1598,6 +1598,25 @@ class Lead:
         phantombuster_auto = "Automatic Prospecting on Linkedin"
         free_mvp = 107
 
+    def __init__(self, **kwargs) -> None:
+        """
+        :param id: int
+        :param title: str
+        :param owner_id: int
+        :param person_id: int
+        :param org_id: int
+        :param origin_id: str
+        :param channel: str
+        """
+
+        self.id = kwargs.get("id", None)
+        self.title = kwargs.get("title", None)
+        self.owner_id = kwargs.get("owner_id", None)
+        self.person_id = kwargs.get("person_id", None)
+        self.org_id = kwargs.get("org_id", None)
+        self.origin_id = kwargs.get("origin_id", None)
+        self.channel = kwargs.get("channel", None)
+
     def create(**kwargs) -> "Lead":
         """
         :param title: str
@@ -1614,7 +1633,7 @@ class Lead:
 
         data = {
             "title": kwargs["title"],
-            "user_id": kwargs.get("owner_id", None),
+            "owner_id": kwargs.get("owner_id", None),
             "person_id": kwargs.get("person_id", None),
             "org_id": kwargs.get("org_id", None),
             "origin_id": kwargs.get("origin_id", None),
@@ -1638,15 +1657,9 @@ class Lead:
             return Lead(
                 id=response_json["data"]["id"],
                 title=response_json["data"]["title"],
-                owner_id=response_json["data"]["user_id"]["id"]
-                if response_json["data"]["user_id"]
-                else None,
-                person_id=response_json["data"]["person_id"]["value"]
-                if response_json["data"]["person_id"]
-                else None,
-                org_id=response_json["data"]["org_id"]["value"]
-                if response_json["data"]["org_id"]
-                else None,
-                origin_id=response_json["data"]["origin_id"],
-                channel=response_json["data"]["channel"],
+                owner_id=response_json["data"].get("owner_id"),
+                person_id=response_json["data"].get("person_id"),
+                org_id=response_json["data"].get("organization_id"),
+                origin_id=response_json["data"].get("origin_id"),
+                channel=response_json["data"].get("channel"),
             )
