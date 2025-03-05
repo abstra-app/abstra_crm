@@ -455,6 +455,7 @@ class Person:
             response = requests.post(
                 url, data=json.dumps(data), headers={"Content-Type": CONTENT_TYPE}
             )
+            print(response.text)
             response.raise_for_status()
         except Exception as e:
             print(f"Error creating person - {e}")
