@@ -662,6 +662,7 @@ class Deal:
         :param origin_id: str
         :param owner_id: int
         :param owner_name: str
+        :param won_time: str
         :param channel: str
         :param tag: str
         :param use_case: str
@@ -688,6 +689,7 @@ class Deal:
         self.owner_id = kwargs.get("owner_id", None)
         self.origin_id = kwargs.get("origin_id", None)
         self.owner_name = kwargs.get("owner_name", None) if kwargs.get("owner_name", None) else self.deal_owner
+        self.won_time = kwargs.get("won_time", None)
         self.channel = kwargs.get("channel", None)
         self.ad_name = kwargs.get("ad_name", None)
         self.tag = kwargs.get("tag", None)
@@ -922,7 +924,8 @@ class Deal:
                     pipeline_id=result["pipeline_id"],
                     origin_id=result.get("origin_id"),
                     owner_id=result["user_id"]["id"] if result["user_id"] else None,
-                    owner_name = result["user_id"]["name"] if result["user_id"] else None,
+                    owner_name=result["user_id"]["name"] if result["user_id"] else None,
+                    won_time=result.get("won_time", None),
                     channel=result["channel"],
                     ads_id=result["67e90727a702feaee708eb4be15c896f1e4d125e"],
                     campaign_id=result["90ee914e411f8e76eda8b270c576fa20ce945af6"],
