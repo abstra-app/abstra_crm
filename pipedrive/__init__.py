@@ -550,7 +550,6 @@ class Person:
                     id=result["id"],
                     name=result["name"],
                     email=result["primary_email"],
-                    emails=result["emails"],
                     organization_id=result["org_id"]["value"]
                     if result["org_id"]
                     else None,
