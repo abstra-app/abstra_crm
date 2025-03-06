@@ -1295,7 +1295,6 @@ class Deal:
             "ad_name": self.ad_name,
             "stage_id": self.stage_id,
             "pipeline_id": self.pipeline_id,
-            "pipeline": self.pipeline,
             "owner_id": self.owner_id,
             "owner_name": self.owner_name,
             "channel": self.channel,
