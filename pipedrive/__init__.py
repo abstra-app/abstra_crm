@@ -920,7 +920,7 @@ class Deal:
                     else None,
                     stage_id=result["stage_id"],
                     pipeline_id=result["pipeline_id"],
-                    origin_id=response_json["data"].get("origin_id"),
+                    origin_id=result["data"].get("origin_id"),
                     owner_id=result["user_id"]["id"] if result["user_id"] else None,
                     owner_name = result["user_id"]["name"] if result["user_id"] else None,
                     channel=result["channel"],
