@@ -225,6 +225,39 @@ class Organization:
             )
 
         return None
+    
+    @staticmethod
+    def get_all_organizations() -> list["Organization"]:
+        url = encode_url(entity="organizations", params={"limit": 500})
+
+        response = requests.get(url)
+        response_json = response.json()
+        data = response_json["data"]
+        additional_data = response_json.get(
+            "additional_data", {"pagination": {"more_items_in_collection": False}}
+        )
+
+        while additional_data["pagination"]["more_items_in_collection"]:
+            new_url = url + f'&start={additional_data["pagination"]["next_start"]}'
+            response = requests.get(new_url)
+            response_json = response.json()
+
+            data += response_json["data"]
+            additional_data = response_json.get(
+                "additional_data", {"pagination": {"more_items_in_collection": False}}
+            )
+
+        if data:
+            return [
+                Organization(
+                    id=result["id"],
+                    name=result["name"],
+                    owner_id=result["owner_id"]["value"]
+                    if result["owner_id"]
+                    else None,
+                )
+                for result in data
+            ]
 
 
 class Person:
@@ -347,7 +380,6 @@ class Person:
         response = requests.get(url)
         response_json = response.json()
 
-        # ! Temporary fix for the response
         if "data" not in response_json:
             return []
 
@@ -450,7 +482,6 @@ class Person:
             response = requests.post(
                 url, data=json.dumps(data), headers={"Content-Type": CONTENT_TYPE}
             )
-            print(response.text)
             response.raise_for_status()
         except Exception as e:
             print(f"Error creating person - {e}")
@@ -491,6 +522,45 @@ class Person:
             )
 
         return None
+
+    @staticmethod
+    def get_all_persons() -> list["Person"]:
+        url = encode_url(entity="persons", params={"limit": 500})
+
+        response = requests.get(url)
+        response_json = response.json()
+        data = response_json["data"]
+        additional_data = response_json.get(
+            "additional_data", {"pagination": {"more_items_in_collection": False}}
+        )
+
+        while additional_data["pagination"]["more_items_in_collection"]:
+            new_url = url + f'&start={additional_data["pagination"]["next_start"]}'
+            response = requests.get(new_url)
+            response_json = response.json()
+
+            data += response_json["data"]
+            additional_data = response_json.get(
+                "additional_data", {"pagination": {"more_items_in_collection": False}}
+            )
+
+        if data:
+            return [
+                Person(
+                    id=result["id"],
+                    name=result["name"],
+                    email=result["primary_email"],
+                    emails=result["emails"],
+                    organization_id=result["org_id"]["value"]
+                    if result["org_id"]
+                    else None,
+                    owner_id=result["owner_id"]["value"]
+                    if result["owner_id"]
+                    else None,
+                    job_title=result.get(Person.CustomFields.job_title, None),
+                    linkedin=result.get(Person.CustomFields.linkedin, None),
+                ) for result in data
+            ]
 
     def extract_domain(self):
         if self.email is None:
@@ -767,7 +837,6 @@ class Deal:
             response = requests.post(
                 url, data=json.dumps(data), headers={"Content-Type": CONTENT_TYPE}
             )
-            print(response.text)
             response.raise_for_status()
         except Exception as e:
             print(f"Error creating deal - {e}")
@@ -1565,7 +1634,6 @@ class Notes:
             response = requests.post(
                 url, data=json.dumps(data), headers={"Content-Type": CONTENT_TYPE}
             )
-            print(response.text)
             response.raise_for_status()
         except Exception as e:
             print(f"Error creating note - {e}")
@@ -1636,7 +1704,6 @@ class Lead:
             response = requests.post(
                 url, data=json.dumps(data), headers={"Content-Type": CONTENT_TYPE}
             )
-            print(response.text)
             response.raise_for_status()
         except Exception as e:
             print(f"Error creating lead - {e}")
