@@ -673,7 +673,7 @@ class Deal:
         :param status: str
         :param lost_reason: str
         :param expected_close_date: str
-        :param deal_probability: float
+        :param weighted_value: float
         :param add_time: str iso format
         :param next_activity_date: str iso format
         """
@@ -701,7 +701,7 @@ class Deal:
         self.status = kwargs.get("status", None)
         self.lost_reason = kwargs.get("lost_reason", None)
         self.expected_close_date = kwargs.get("expected_close_date", None)
-        self.deal_probability = kwargs.get("deal_probability", None)
+        self.weighted_value = kwargs.get("weighted_value", None)
         self.add_time = kwargs.get("add_time", None)
         self.next_activity_date = kwargs.get("next_activity_date", None)
 
@@ -940,7 +940,7 @@ class Deal:
                     status=result["status"],
                     lost_reason=result["lost_reason"],
                     expected_close_date=result.get("expected_close_date", None),
-                    deal_probability=result.get("deal_probability", None),
+                    weighted_value=result.get("weighted_value", None),
                     add_time=result["add_time"],
                     qualification_milestone=result[
                         "5abfbfa90d21348b998b9c259392182130d04647"
@@ -1303,7 +1303,7 @@ class Deal:
             "owner_name": self.owner_name,
             "won_time": self.won_time,
             "channel": self.channel,
-            "deal_probability": self.deal_probability,
+            "weighted_value": self.weighted_value,
             "tag": self.tag,
             "use_case": self.use_case,
             "company_domain": self.company_domain,
