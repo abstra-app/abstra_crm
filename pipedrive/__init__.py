@@ -658,6 +658,7 @@ class Deal:
         :param campaign_id: str
         :param ad_name: str
         :param stage_id: int
+        :param stage_change_time: str
         :param pipeline_id: int
         :param origin_id: str
         :param owner_id: int
@@ -685,6 +686,7 @@ class Deal:
         self.ads_id = kwargs.get("ads_id", None)
         self.campaign_id = kwargs.get("campaign_id", None)
         self.stage_id = kwargs.get("stage_id", None)
+        self.stage_change_time = kwargs.get("stage_change_time", None)
         self.pipeline_id = kwargs.get("pipeline_id", None)
         self.owner_id = kwargs.get("owner_id", None)
         self.origin_id = kwargs.get("origin_id", None)
@@ -921,6 +923,7 @@ class Deal:
                     if result["person_id"]
                     else None,
                     stage_id=result["stage_id"],
+                    stage_change_time=result.get("stage_change_time", None),
                     pipeline_id=result["pipeline_id"],
                     origin_id=result.get("origin_id"),
                     owner_id=result["user_id"]["id"] if result["user_id"] else None,
@@ -1008,6 +1011,7 @@ class Deal:
             org_id=data["org_id"]["value"] if data["org_id"] else None,
             person_id=data["person_id"]["value"] if data["person_id"] else None,
             stage_id=data["stage_id"],
+            stage_change_time=data.get("stage_change_time", None),
             pipeline_id=data["pipeline_id"],
             owner_id=data["user_id"]["id"] if data["user_id"] else None,
             won_time=data.get("won_time", None),
@@ -1298,6 +1302,7 @@ class Deal:
             "campaign_id": self.campaign_id,
             "ad_name": self.ad_name,
             "stage_id": self.stage_id,
+            "stage_change_time": self.stage_change_time,
             "pipeline_id": self.pipeline_id,
             "owner_id": self.owner_id,
             "owner_name": self.owner_name,
