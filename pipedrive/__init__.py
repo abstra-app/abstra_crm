@@ -666,6 +666,7 @@ class Deal:
         :param owner_name: str
         :param won_time: str
         :param channel: str
+        :param channel_id: str
         :param tag: str
         :param use_case: str
         :param company_domain: str
@@ -694,6 +695,7 @@ class Deal:
         self.owner_name = kwargs.get("owner_name", None) if kwargs.get("owner_name", None) else self.deal_owner
         self.won_time = kwargs.get("won_time", None)
         self.channel = kwargs.get("channel", None)
+        self.channel_id = kwargs.get("channel_id", None)
         self.ad_name = kwargs.get("ad_name", None)
         self.tag = kwargs.get("tag", None)
         self.use_case = kwargs.get("use_case", None)
@@ -775,6 +777,7 @@ class Deal:
         :param owner_id: int
         :param origin_id: str
         :param channel: str
+        :param channel_id: str
         :param ads_id: str
         :param campaign_id: str
         :param ad_name: str
@@ -807,6 +810,7 @@ class Deal:
             "user_id": kwargs.get("owner_id", None),
             "origin_id": kwargs.get("origin_id", None),
             "channel": kwargs.get("channel", None),
+            "channel_id": kwargs.get("channel_id", None),
             "67e90727a702feaee708eb4be15c896f1e4d125e": kwargs.get(
                 "ads_id", None
             ),  # custom field
@@ -874,6 +878,7 @@ class Deal:
                 if response_json["data"]["user_id"]
                 else None,
                 channel=response_json["data"]["channel"],
+                channel_id=response_json["data"].get("channel_id"),
                 tag=response_json["data"]["70a34135774fbab2a37608d3d4c5da3be9dfa10a"],
                 use_case=response_json["data"][
                     "aa6cbdaafd283f46db835b902902f549e86bb915"
@@ -931,6 +936,7 @@ class Deal:
                     owner_name=result["user_id"]["name"] if result["user_id"] else None,
                     won_time=result.get("won_time", None),
                     channel=result["channel"],
+                    channel_id=result.get("channel_id"),
                     ads_id=result["67e90727a702feaee708eb4be15c896f1e4d125e"],
                     campaign_id=result["90ee914e411f8e76eda8b270c576fa20ce945af6"],
                     ad_name=result["cb5af1d8630657fc3ab4bb01c243f993141df2e7"],
@@ -1017,6 +1023,7 @@ class Deal:
             owner_id=data["user_id"]["id"] if data["user_id"] else None,
             won_time=data.get("won_time", None),
             channel=data["channel"],
+            channel_id=data.get("channel_id", None),
             ads_id=data["67e90727a702feaee708eb4be15c896f1e4d125e"],
             campaign_id=data["90ee914e411f8e76eda8b270c576fa20ce945af6"],
             ad_name=data["cb5af1d8630657fc3ab4bb01c243f993141df2e7"],
