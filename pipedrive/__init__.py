@@ -630,6 +630,7 @@ class Deal:
         cubo = "Cubo"
         phantombuster_auto = "Automatic Prospecting on LinkedIn"
         free_mvp = 107
+        abstra_start = 173
 
     @dataclass
     class Tag:
@@ -1663,6 +1664,7 @@ class Lead:
     @dataclass
     class Channel:
         phantombuster_auto = 97
+        abstra_start = 173
 
     def __init__(self, **kwargs) -> None:
         """
@@ -1673,6 +1675,7 @@ class Lead:
         :param org_id: int
         :param origin_id: str
         :param channel: str
+        :param channel_id: str
         """
 
         self.id = kwargs.get("id", None)
@@ -1682,7 +1685,9 @@ class Lead:
         self.org_id = kwargs.get("org_id", None)
         self.origin_id = kwargs.get("origin_id", None)
         self.channel = kwargs.get("channel", None)
+        self.channel_id = kwargs.get("channel_id", None)
 
+    @staticmethod
     def create(**kwargs) -> "Lead":
         """
         :param title: str
@@ -1691,6 +1696,7 @@ class Lead:
         :param org_id: int
         :param origin_id: str 
         :param channel: str
+        :param channel_id: str
         """
 
         if "title" not in kwargs:
@@ -1704,6 +1710,7 @@ class Lead:
             "organization_id": kwargs.get("org_id", None),
             "origin_id": kwargs.get("origin_id", None),
             "channel": kwargs.get("channel", None),
+            "channel_id": kwargs.get("channel_id", None),
         }
 
         url = encode_url(entity="leads")
@@ -1728,4 +1735,50 @@ class Lead:
                 org_id=response_json["data"].get("organization_id"),
                 origin_id=response_json["data"].get("origin_id"),
                 channel=response_json["data"].get("channel"),
+                channel_id=response_json["data"].get("channel_id"),
             )
+        
+    @staticmethod
+    def get_lead_by_person_id(person_id: int) -> list["Lead"]:
+        """
+        Retrieve Leads from Pipedrive by Person_id.
+
+        :param person_id: int
+        :return: list[Lead]
+        """
+
+        url = encode_url(entity="leads")
+
+        response = requests.get(url, data={"person_id": person_id})
+        response_json = response.json()
+
+        data = response_json["data"]
+        additional_data = response_json.get(
+            "additional_data", {"pagination": {"more_items_in_collection": False}}
+        )
+
+        while additional_data["pagination"]["more_items_in_collection"]:
+            new_url = url + f'&start={additional_data["pagination"]["next_start"]}'
+            response = requests.get(new_url)
+            response_json = response.json()
+
+            data += response_json["data"]
+            additional_data = response_json.get(
+                "additional_data", {"pagination": {"more_items_in_collection": False}}
+            )
+        if data:
+            return [
+                Lead(
+                    id=result["id"],
+                    title=result["title"],
+                    owner_id=result.get("owner_id"),
+                    person_id=result.get("person_id"),
+                    org_id=result.get("organization_id"),
+                    origin_id=result.get("origin_id"),
+                    channel=result.get("channel"),
+                    channel_id=result.get("channel_id"),
+                )
+                for result in data
+            ]
+        else:
+            return []
