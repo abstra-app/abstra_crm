@@ -1353,6 +1353,7 @@ class Activity:
         """
         :param id: int
         :param deal_id: int
+        :param lead_id: str
         :param subject: str
         :param type: str
         :param due_date: str
@@ -1367,6 +1368,7 @@ class Activity:
 
         self.id = kwargs.get("id", None)
         self.deal_id = kwargs.get("deal_id", None)
+        self.lead_id = kwargs.get("lead_id", None)
         self.subject = kwargs.get("subject", None)
         self.type = kwargs.get("type", None)
         self.due_date = kwargs.get("due_date", None)
@@ -1394,6 +1396,7 @@ class Activity:
         Create a new activity in Pipedrive.
 
         :param deal_id: int
+        :param lead_id: str
         :param subject: str
         :param type: str
         :param note: str
@@ -1405,14 +1408,13 @@ class Activity:
         :return: Activity
         """
 
-        if "deal_id" not in kwargs or "subject" not in kwargs:
-            print("deal_id and subject are required")
+        if ("deal_id" not in kwargs and "lead_id" not in kwargs) or "subject" not in kwargs:
+            print("deal_id or lead_id and subject are required")
             return None
 
         url = encode_url(entity="activities")
 
         data = {
-            "deal_id": kwargs["deal_id"],
             "subject": kwargs["subject"],
             "type": kwargs.get("type", "Meeting"),
             "note": kwargs.get("note", None),
@@ -1421,6 +1423,11 @@ class Activity:
             "duration": kwargs.get("duration", None),
             "done": kwargs.get("done", False),
         }
+
+        if "deal_id" in kwargs:
+            data["deal_id"] = kwargs["deal_id"]
+        if "lead_id" in kwargs:
+            data["lead_id"] = kwargs["lead_id"]
 
         if "participants_ids" in kwargs:
             data["participants"] = [
@@ -1443,7 +1450,8 @@ class Activity:
         if response_json["success"]:
             return Activity(
                 id=response_json["data"]["id"],
-                deal_id=response_json["data"]["deal_id"],
+                deal_id=response_json["data"].get("deal_id"),
+                lead_id=response_json["data"].get("lead_id"),
                 subject=response_json["data"]["subject"],
                 type=response_json["data"]["type"],
                 due_date=response_json["data"]["due_date"],
@@ -1486,7 +1494,8 @@ class Activity:
             return [
                 Activity(
                     id=result["id"],
-                    deal_id=result["deal_id"],
+                    deal_id=result.get("deal_id"),
+                    lead_id=result.get("lead_id"),
                     subject=result["subject"],
                     type=result["type"],
                     due_date=result["due_date"],
@@ -1510,6 +1519,7 @@ class Activity:
         Update an activity in Pipedrive.
 
         :param deal_id: int
+        :param lead_id: str
         :param subject: str
         :param type: str
         :param note: str
@@ -1527,6 +1537,8 @@ class Activity:
 
         if "deal_id" in kwargs:
             data["deal_id"] = kwargs["deal_id"]
+        if "lead_id" in kwargs:
+            data["lead_id"] = kwargs["lead_id"]
         if "subject" in kwargs:
             data["subject"] = kwargs["subject"]
         if "type" in kwargs:
@@ -1567,7 +1579,8 @@ class Activity:
         if response_json["success"]:
             return Activity(
                 id=response_json["data"]["id"],
-                deal_id=response_json["data"]["deal_id"],
+                deal_id=response_json["data"].get("deal_id"),
+                lead_id=response_json["data"].get("lead_id"),
                 subject=response_json["data"]["subject"],
                 type=response_json["data"]["type"],
                 due_date=response_json["data"]["due_date"],
@@ -1588,6 +1601,7 @@ class Activity:
         return {
             "id": self.id,
             "deal_id": self.deal_id,
+            "lead_id": self.lead_id,
             "subject": self.subject,
             "type": self.type,
             "due_date": self.due_date,
