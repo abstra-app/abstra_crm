@@ -1789,3 +1789,48 @@ class Lead:
             ]
         else:
             return []
+
+    @staticmethod
+    def get_lead_by_org_id(org_id: int) -> list["Lead"]:
+        """
+        Retrieve Leads from Pipedrive by Org_id.
+
+        :param org_id: int
+        :return: list[Lead]
+        """
+
+        url = encode_url(entity="leads")
+
+        response = requests.get(url, data={"organization_id": org_id})
+        response_json = response.json()
+
+        data = response_json["data"]
+        additional_data = response_json.get(
+            "additional_data", {"pagination": {"more_items_in_collection": False}}
+        )
+
+        while additional_data["pagination"]["more_items_in_collection"]:
+            new_url = url + f'&start={additional_data["pagination"]["next_start"]}'
+            response = requests.get(new_url)
+            response_json = response.json()
+
+            data += response_json["data"]
+            additional_data = response_json.get(
+                "additional_data", {"pagination": {"more_items_in_collection": False}}
+            )
+        if data:
+            return [
+                Lead(
+                    id=result["id"],
+                    title=result["title"],
+                    owner_id=result.get("owner_id"),
+                    person_id=result.get("person_id"),
+                    org_id=result.get("organization_id"),
+                    origin_id=result.get("origin_id"),
+                    channel=result.get("channel"),
+                    channel_id=result.get("channel_id"),
+                )
+                for result in data
+            ]
+        else:
+            return []
