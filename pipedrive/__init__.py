@@ -1848,3 +1848,15 @@ class Lead:
             ]
         else:
             return []
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "title": self.title,
+            "owner_id": self.owner_id,
+            "person_id": self.person_id,
+            "org_id": self.org_id,
+            "origin_id": self.origin_id,
+            "channel": self.channel,
+            "channel_id": self.channel_id,
+        }
