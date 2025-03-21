@@ -1770,7 +1770,7 @@ class Lead:
 
         url = encode_url(entity="leads")
 
-        response = requests.get(url, data={"person_id": person_id})
+        response = requests.get(url, params={"person_id": person_id})
         response_json = response.json()
 
         data = response_json["data"]
@@ -1815,7 +1815,7 @@ class Lead:
 
         url = encode_url(entity="leads")
 
-        response = requests.get(url, data={"organization_id": org_id})
+        response = requests.get(url, params={"organization_id": org_id})
         response_json = response.json()
 
         data = response_json["data"]
