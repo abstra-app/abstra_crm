@@ -1686,16 +1686,12 @@ class Lead:
     class Channel:
         phantombuster_auto = 97
         abstra_start = 173
-        none = "(None)"
-        rpf = "RPF"
-        personal_network = "Personal Network"
-        event = "Event"
-        google_ads = "Google Ads"
-        linkedin_ads = "Linkedin Ads"
-        website_demo = "Website Demo"
-        outbound = "Outbound"
-        product = "Product"
-        cubo = "Cubo"
+        outbound = 33
+        inbound = 174
+        event = 29
+        personal_network = 28
+        yc_referral = 95
+        investor_intro = 103
 
     def __init__(self, **kwargs) -> None:
         """
