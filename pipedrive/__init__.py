@@ -1692,6 +1692,17 @@ class Lead:
         personal_network = 28
         yc_referral = 95
         investor_intro = 103
+        previous_customer = 101
+        linkedin_automatic_prospecting = 97
+        rfp = 27
+        google_ads = 30
+        linkedin_ads = 31
+        customer_referral = 65
+        prospect_referral = 66
+        cubo = 76
+        product = 89
+        linkedin_content = 93
+        website_demo = 32
 
     def __init__(self, **kwargs) -> None:
         """
